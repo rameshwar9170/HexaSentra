@@ -18,10 +18,11 @@ const Navbar = () => {
 
     const navLinks = [
         { name: 'Home', path: '/' },
-        { name: 'About Us', path: '/about' },
+        { name: 'About', path: '/about' },
         { name: 'Services', path: '/services' },
+        { name: 'Pricing', path: '/pricing' },
         { name: 'Clients', path: '/clients' },
-        { name: 'Contact Us', path: '/contact' },
+        { name: 'Contact', path: '/contact' },
     ];
 
     return (
@@ -39,7 +40,7 @@ const Navbar = () => {
                             <FaShieldAlt className="text-4xl text-cyber-blue group-hover:animate-pulse" />
                             <div className="absolute inset-0 bg-cyber-blue/20 blur-xl group-hover:bg-cyber-blue/40 transition-all duration-300"></div>
                         </div>
-                        <span className="text-2xl font-bold gradient-text">CyberGuard</span>
+                        <span className="text-2xl font-bold gradient-text">HexaSentra</span>
                     </Link>
 
                     {/* Desktop Menu */}

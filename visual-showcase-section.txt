@@ -1,0 +1,55 @@
+// Add this section before the Services Section in Home.js
+
+{/* Visual Showcase Section */}
+<section className="py-20 bg-cyber-darker relative overflow-hidden">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+        >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
+                Professional <span className="text-blue-400">Security Testing</span>
+            </h2>
+            <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+                Comprehensive security solutions backed by real-world expertise
+            </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+                { img: '/images/web-security.png', title: 'Web Application Security', desc: 'Advanced penetration testing for web platforms' },
+                { img: '/images/mobile-security.png', title: 'Mobile App Security', desc: 'iOS & Android security assessment' },
+                { img: '/images/cloud-security.png', title: 'Cloud Infrastructure', desc: 'Secure your cloud environment' },
+                { img: '/images/network-security.png', title: 'Network Security', desc: 'Comprehensive network testing' },
+                { img: '/images/api-security.png', title: 'API Security', desc: 'Secure your APIs and endpoints' },
+                { img: '/images/code-review.png', title: 'Code Review', desc: 'Manual secure code analysis' }
+            ].map((item, index) => (
+                <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    whileHover={{ scale: 1.05, y: -10 }}
+                    className="relative rounded-2xl overflow-hidden group cursor-pointer border border-blue-500/20"
+                >
+                    <div className="aspect-video relative">
+                        <img 
+                            src={item.img} 
+                            alt={item.title}
+                            className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-cyber-darker via-cyber-darker/50 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                        <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
+                        <p className="text-gray-300 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500">{item.desc}</p>
+                    </div>
+                </motion.div>
+            ))}
+        </div>
+    </div>
+</section>

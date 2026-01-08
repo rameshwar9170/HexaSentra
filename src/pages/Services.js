@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import {
     FaBug, FaShieldAlt, FaSearch, FaLock, FaCode, FaServer,
-    FaCloud, FaMobile, FaCheckCircle
+    FaCloud, FaMobile, FaCheckCircle, FaUsers, FaClock, FaEye,
+    FaArrowRight, FaGraduationCap, FaPhone
 } from 'react-icons/fa';
 
 const Services = () => {
@@ -11,178 +13,151 @@ const Services = () => {
     const services = [
         {
             icon: <FaBug />,
-            title: 'Bug Bounty Hunting',
-            shortDesc: 'Expert vulnerability discovery on major platforms',
-            fullDesc: 'As a top-ranked bug bounty hunter, I specialize in discovering critical vulnerabilities across web applications, mobile apps, and APIs. With a proven track record on platforms like HackerOne and Bugcrowd, I help organizations identify security flaws before malicious actors can exploit them.',
-            features: [
-                'Web Application Testing',
-                'API Security Assessment',
-                'Mobile App Penetration Testing',
-                'Business Logic Flaws',
-                'Authentication Bypass',
-                'Data Exposure Analysis'
-            ],
-            color: 'from-cyber-blue to-blue-600'
-        },
-        {
-            icon: <FaShieldAlt />,
             title: 'Penetration Testing',
-            shortDesc: 'Comprehensive security assessments',
-            fullDesc: 'Thorough penetration testing services following industry-standard methodologies like OWASP, PTES, and NIST. I simulate real-world attacks to identify vulnerabilities in your infrastructure, applications, and networks.',
+            shortDesc: 'Deep, manual penetration testing for modern applications and platforms',
+            fullDesc: 'HexaSentra provides deep, manual penetration testing for modern applications and platforms. Our testing simulates real attackers attempting to bypass authentication and authorization, abuse business logic, escalate privileges, access sensitive data, and chain multiple weaknesses together. We do not aim to list vulnerabilities. We aim to demonstrate risk.',
             features: [
-                'External Network Penetration Testing',
-                'Internal Network Assessment',
-                'Web Application Penetration Testing',
-                'Wireless Security Testing',
-                'Social Engineering Assessments',
-                'Red Team Operations'
-            ],
-            color: 'from-cyber-purple to-purple-600'
-        },
-        {
-            icon: <FaSearch />,
-            title: 'Vulnerability Assessment',
-            shortDesc: 'Identify and prioritize security weaknesses',
-            fullDesc: 'Systematic examination of your systems to identify, quantify, and prioritize vulnerabilities. I provide detailed reports with risk ratings and remediation recommendations.',
-            features: [
-                'Automated Vulnerability Scanning',
-                'Manual Security Testing',
-                'Risk Assessment & Prioritization',
-                'Compliance Verification',
-                'Patch Management Review',
-                'Configuration Audits'
-            ],
-            color: 'from-cyber-pink to-pink-600'
-        },
-        {
-            icon: <FaLock />,
-            title: 'Security Audits',
-            shortDesc: 'In-depth security posture evaluation',
-            fullDesc: 'Comprehensive security audits that evaluate your entire security posture, including policies, procedures, and technical controls. I provide actionable recommendations to strengthen your defenses.',
-            features: [
-                'Security Policy Review',
-                'Access Control Audits',
-                'Encryption Implementation Review',
-                'Incident Response Planning',
-                'Security Architecture Review',
-                'Compliance Gap Analysis'
-            ],
-            color: 'from-cyber-green to-green-600'
-        },
-        {
-            icon: <FaCode />,
-            title: 'Secure Code Review',
-            shortDesc: 'Line-by-line security analysis',
-            fullDesc: 'Expert code review services to identify security vulnerabilities in your source code. I analyze your codebase for common vulnerabilities like SQL injection, XSS, CSRF, and insecure configurations.',
-            features: [
-                'Static Code Analysis',
-                'Dynamic Application Testing',
-                'Dependency Vulnerability Scanning',
-                'Security Best Practices Review',
-                'OWASP Top 10 Compliance',
-                'Secure Development Training'
+                'Bypass authentication and authorization',
+                'Abuse business logic',
+                'Escalate privileges',
+                'Access sensitive data',
+                'Chain multiple weaknesses together',
+                'Real attacker simulation'
             ],
             color: 'from-blue-500 to-cyan-500'
         },
         {
-            icon: <FaServer />,
-            title: 'Infrastructure Security',
-            shortDesc: 'Hardening and securing your infrastructure',
-            fullDesc: 'Comprehensive infrastructure security services including server hardening, network segmentation, and security architecture design. I help you build a robust security foundation.',
+            icon: <FaShieldAlt />,
+            title: 'Enterprise Security Assessments',
+            shortDesc: 'Broader security assessments for complex environments',
+            fullDesc: 'For organizations with multiple systems and complex environments, we provide broader security assessments that look at how systems interact, where trust breaks, and how an attacker could move across your environment. These engagements help leadership understand real organizational exposure, not isolated technical issues.',
             features: [
-                'Server Hardening',
-                'Network Segmentation',
-                'Firewall Configuration',
-                'IDS/IPS Implementation',
-                'Security Monitoring Setup',
-                'Disaster Recovery Planning'
+                'Multi-system interaction analysis',
+                'Trust boundary evaluation',
+                'Cross-environment attack paths',
+                'Leadership-focused risk assessment',
+                'Organizational exposure mapping',
+                'Strategic security recommendations'
             ],
             color: 'from-purple-500 to-indigo-500'
         },
         {
-            icon: <FaCloud />,
-            title: 'Cloud Security',
-            shortDesc: 'Secure your cloud infrastructure',
-            fullDesc: 'Specialized cloud security services for AWS, Azure, and GCP. I help you implement security best practices, configure proper access controls, and ensure compliance.',
+            icon: <FaUsers />,
+            title: 'Red Team Engagements',
+            shortDesc: 'Real-world attack simulation to test detection and response',
+            fullDesc: 'Our red team engagements simulate real-world attacks designed to test detection, monitoring, and response capabilities. This service helps organizations evaluate security visibility, incident response readiness, and internal coordination during attacks. The objective is learning and improvement, not disruption.',
             features: [
-                'Cloud Security Assessment',
-                'IAM Configuration Review',
-                'Data Encryption Setup',
-                'Cloud Compliance Audits',
-                'Container Security',
-                'Serverless Security'
+                'Security visibility testing',
+                'Incident response readiness',
+                'Internal coordination evaluation',
+                'Real-world attack simulation',
+                'Detection capability assessment',
+                'Response improvement recommendations'
+            ],
+            color: 'from-red-500 to-pink-500'
+        },
+        {
+            icon: <FaCode />,
+            title: 'Secure Code Review',
+            shortDesc: 'Manual secure code reviews to identify security weaknesses early',
+            fullDesc: 'HexaSentra performs manual secure code reviews to identify security weaknesses early. This service is valuable for fast-moving development teams, critical applications, and AI-assisted or rapidly written codebases. We focus on logic, access control, and design decisions that often lead to serious vulnerabilities later.',
+            features: [
+                'Manual code analysis',
+                'Logic flaw identification',
+                'Access control review',
+                'Design decision evaluation',
+                'Early vulnerability detection',
+                'Development team integration'
+            ],
+            color: 'from-green-500 to-emerald-500'
+        },
+        {
+            icon: <FaCloud />,
+            title: 'Cloud & Infrastructure Security',
+            shortDesc: 'Assess cloud and infrastructure environments for attack paths',
+            fullDesc: 'We assess cloud and infrastructure environments to identify attack paths that could result in full compromise. Our reviews focus on realistic abuse scenarios, not compliance-only checks. We understand how modern cloud environments work and where they typically fail.',
+            features: [
+                'Cloud environment assessment',
+                'Infrastructure attack path analysis',
+                'Realistic abuse scenario testing',
+                'Full compromise risk evaluation',
+                'Modern cloud security review',
+                'Beyond compliance checking'
             ],
             color: 'from-cyan-500 to-blue-500'
         },
         {
-            icon: <FaMobile />,
-            title: 'Mobile Security',
-            shortDesc: 'iOS and Android app security testing',
-            fullDesc: 'Comprehensive mobile application security testing for both iOS and Android platforms. I identify vulnerabilities in mobile apps, APIs, and backend services.',
+            icon: <FaClock />,
+            title: 'On-Call Pentester Service',
+            shortDesc: 'Direct access to security expertise when you need it',
+            fullDesc: 'HexaSentra offers on-call penetration tester support for organizations that need direct access to security expertise. This service allows you to consult a pentester during development or releases, validate fixes quickly, and get real answers during security incidents. Think of us as an extension of your security team.',
             features: [
-                'iOS App Security Testing',
-                'Android App Security Testing',
-                'API Security Assessment',
-                'Data Storage Analysis',
-                'Network Communication Review',
-                'Reverse Engineering'
+                'Development consultation',
+                'Release security validation',
+                'Quick fix verification',
+                'Security incident support',
+                'Real-time expert access',
+                'Security team extension'
             ],
-            color: 'from-pink-500 to-rose-500'
+            color: 'from-orange-500 to-yellow-500'
+        },
+        {
+            icon: <FaGraduationCap />,
+            title: 'Corporate Cybersecurity Training',
+            shortDesc: 'Real-world security training for technical teams',
+            fullDesc: 'We provide corporate cybersecurity training designed for real teams, not theory. Training is tailored for developers, technical teams, and engineering leadership. Sessions focus on real attack examples, common mistakes, and practical defense strategies.',
+            features: [
+                'Developer-focused training',
+                'Technical team education',
+                'Engineering leadership sessions',
+                'Real attack examples',
+                'Common mistake analysis',
+                'Practical defense strategies'
+            ],
+            color: 'from-indigo-500 to-purple-500'
         }
     ];
 
-    const packages = [
+    const whyHexaSentra = [
         {
-            name: 'Basic',
-            price: '$2,500',
-            duration: '1-2 weeks',
-            features: [
-                'Single Service Assessment',
-                'Detailed Report',
-                'Executive Summary',
-                'Email Support',
-                '30-day Retest'
-            ],
-            popular: false
+            icon: <FaUsers />,
+            title: 'Team of experienced hackers and security researchers',
+            description: 'Our team brings years of experience from top bug bounty platforms and real-world security engagements.'
         },
         {
-            name: 'Professional',
-            price: '$5,000',
-            duration: '2-4 weeks',
-            features: [
-                'Multiple Service Assessments',
-                'Comprehensive Report',
-                'Executive Presentation',
-                'Priority Support',
-                '60-day Retest',
-                'Remediation Guidance'
-            ],
-            popular: true
+            icon: <FaEye />,
+            title: 'Manual testing instead of scanner-only results',
+            description: 'We prioritize human expertise over automated tools to find complex vulnerabilities that scanners miss.'
         },
         {
-            name: 'Enterprise',
-            price: 'Custom',
-            duration: 'Flexible',
-            features: [
-                'Full Security Program',
-                'Ongoing Assessments',
-                'Dedicated Security Consultant',
-                '24/7 Support',
-                'Unlimited Retests',
-                'Security Training',
-                'Compliance Support'
-            ],
-            popular: false
+            icon: <FaCheckCircle />,
+            title: 'Clear, professional reports',
+            description: 'Our reports focus on actionable findings with clear business impact, not technical noise.'
+        },
+        {
+            icon: <FaShieldAlt />,
+            title: 'Honest risk assessment without exaggeration',
+            description: 'We provide realistic risk assessments based on actual exploitability and business impact.'
+        },
+        {
+            icon: <FaPhone />,
+            title: 'Direct communication with testers',
+            description: 'Work directly with the security professionals who performed your assessment.'
+        },
+        {
+            icon: <FaLock />,
+            title: 'Confidential and responsible handling',
+            description: 'We treat your security information with the highest level of confidentiality and professionalism.'
         }
     ];
 
     return (
-        <div className="min-h-screen pt-20">
+        <div className="min-h-screen pt-20 bg-cyber-darker">
             {/* Hero Section */}
             <section className="relative py-20 bg-gradient-to-b from-cyber-darker to-cyber-dark overflow-hidden">
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute inset-0" style={{
-                        backgroundImage: 'radial-gradient(circle, #00d4ff 1px, transparent 1px)',
+                        backgroundImage: 'radial-gradient(circle, #2563eb 1px, transparent 1px)',
                         backgroundSize: '50px 50px'
                     }}></div>
                 </div>
@@ -195,11 +170,16 @@ const Services = () => {
                         className="text-center"
                     >
                         <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                            <span className="gradient-text">Security Services</span>
+                            <span className="gradient-text">HexaSentra Services</span>
                         </h1>
-                        <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                            Comprehensive cybersecurity solutions to protect your digital assets from evolving threats
+                        <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
+                            Manual security testing focused on real attack paths and actionable outcomes
                         </p>
+                        <div className="glass-effect rounded-2xl p-6 border border-blue-500/20 inline-block">
+                            <p className="text-lg font-semibold text-blue-400">
+                                Security Built by Hackers
+                            </p>
+                        </div>
                     </motion.div>
                 </div>
             </section>
@@ -207,7 +187,7 @@ const Services = () => {
             {/* Services Grid */}
             <section className="py-20 bg-cyber-dark">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {services.map((service, index) => (
                             <motion.div
                                 key={index}
@@ -216,13 +196,14 @@ const Services = () => {
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6, delay: index * 0.05 }}
                                 onClick={() => setActiveService(index)}
-                                className={`card-hover bg-cyber-darker rounded-2xl p-6 cursor-pointer ${activeService === index ? 'ring-2 ring-cyber-blue' : ''
-                                    }`}
+                                className={`card-hover bg-cyber-darker rounded-2xl p-6 cursor-pointer transition-all duration-300 ${
+                                    activeService === index ? 'ring-2 ring-blue-500 shadow-xl shadow-blue-500/20' : ''
+                                }`}
                             >
-                                <div className={`text-5xl mb-4 bg-gradient-to-r ${service.color} bg-clip-text text-transparent`}>
+                                <div className={`text-4xl mb-4 bg-gradient-to-r ${service.color} bg-clip-text text-transparent`}>
                                     {service.icon}
                                 </div>
-                                <h3 className="text-xl font-bold text-white mb-2">{service.title}</h3>
+                                <h3 className="text-lg font-bold text-white mb-2">{service.title}</h3>
                                 <p className="text-gray-400 text-sm">{service.shortDesc}</p>
                             </motion.div>
                         ))}
@@ -248,16 +229,16 @@ const Services = () => {
                             <p className="text-gray-300 text-lg leading-relaxed mb-8">
                                 {services[activeService].fullDesc}
                             </p>
-                            <a
-                                href="/contact"
-                                className="glow-button inline-block px-8 py-4 bg-gradient-to-r from-cyber-blue to-cyber-purple rounded-full text-white font-bold hover:shadow-2xl hover:shadow-cyber-blue/50 transition-all duration-300"
+                            <Link
+                                to="/contact"
+                                className="glow-button inline-block px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full text-white font-bold hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300"
                             >
                                 Request This Service
-                            </a>
+                            </Link>
                         </div>
 
-                        <div className="bg-cyber-dark rounded-2xl p-8 border border-cyber-blue/20">
-                            <h3 className="text-2xl font-bold text-white mb-6">What's Included</h3>
+                        <div className="bg-cyber-dark rounded-2xl p-8 border border-blue-500/20">
+                            <h3 className="text-2xl font-bold text-white mb-6">What We Focus On</h3>
                             <ul className="space-y-4">
                                 {services[activeService].features.map((feature, index) => (
                                     <motion.li
@@ -267,7 +248,7 @@ const Services = () => {
                                         transition={{ duration: 0.3, delay: index * 0.1 }}
                                         className="flex items-start space-x-3"
                                     >
-                                        <FaCheckCircle className="text-cyber-blue text-xl mt-1 flex-shrink-0" />
+                                        <FaCheckCircle className="text-blue-500 text-lg mt-1 flex-shrink-0" />
                                         <span className="text-gray-300">{feature}</span>
                                     </motion.li>
                                 ))}
@@ -277,7 +258,7 @@ const Services = () => {
                 </div>
             </section>
 
-            {/* Pricing Section */}
+            {/* Why HexaSentra Section */}
             <section className="py-20 bg-cyber-dark">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
@@ -287,60 +268,36 @@ const Services = () => {
                         transition={{ duration: 0.6 }}
                         className="text-center mb-16"
                     >
-                        <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                            <span className="gradient-text">Pricing Packages</span>
+                        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+                            Why Clients Work With <span className="text-blue-400">HexaSentra</span>
                         </h2>
-                        <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-                            Flexible pricing options to suit your security needs
+                        <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+                            We treat security as a partnership, not a transaction
                         </p>
                     </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {packages.map((pkg, index) => (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {whyHexaSentra.map((reason, index) => (
                             <motion.div
                                 key={index}
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                                className={`relative bg-cyber-darker rounded-2xl p-8 border-2 ${pkg.popular ? 'border-cyber-blue shadow-xl shadow-cyber-blue/20' : 'border-cyber-blue/20'
-                                    }`}
+                                className="card-hover bg-cyber-darker rounded-2xl p-8"
                             >
-                                {pkg.popular && (
-                                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-6 py-2 bg-gradient-to-r from-cyber-blue to-cyber-purple rounded-full text-white font-bold text-sm">
-                                        Most Popular
-                                    </div>
-                                )}
-
-                                <h3 className="text-2xl font-bold text-white mb-2">{pkg.name}</h3>
-                                <div className="text-4xl font-bold gradient-text mb-2">{pkg.price}</div>
-                                <p className="text-gray-400 mb-6">{pkg.duration}</p>
-
-                                <ul className="space-y-3 mb-8">
-                                    {pkg.features.map((feature, idx) => (
-                                        <li key={idx} className="flex items-start space-x-2">
-                                            <FaCheckCircle className="text-cyber-blue mt-1 flex-shrink-0" />
-                                            <span className="text-gray-300 text-sm">{feature}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-
-                                <a
-                                    href="/contact"
-                                    className={`block text-center px-6 py-3 rounded-full font-bold transition-all duration-300 ${pkg.popular
-                                            ? 'bg-gradient-to-r from-cyber-blue to-cyber-purple text-white hover:shadow-lg hover:shadow-cyber-blue/50'
-                                            : 'border-2 border-cyber-blue text-cyber-blue hover:bg-cyber-blue/10'
-                                        }`}
-                                >
-                                    Get Started
-                                </a>
+                                <div className="text-4xl text-blue-500 mb-6">
+                                    {reason.icon}
+                                </div>
+                                <h3 className="text-lg font-bold text-white mb-4">{reason.title}</h3>
+                                <p className="text-gray-400 leading-relaxed">{reason.description}</p>
                             </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Process Section */}
+            {/* Our Approach Section */}
             <section className="py-20 bg-cyber-darker">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
@@ -350,35 +307,108 @@ const Services = () => {
                         transition={{ duration: 0.6 }}
                         className="text-center mb-16"
                     >
-                        <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                            <span className="gradient-text">My Process</span>
+                        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+                            How We Do <span className="text-blue-400">Security Testing</span>
                         </h2>
-                        <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-                            A systematic approach to securing your digital assets
+                        <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+                            At HexaSentra, manual testing is the foundation of every engagement
                         </p>
                     </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {[
-                            { step: '01', title: 'Discovery', desc: 'Understanding your security needs and objectives' },
-                            { step: '02', title: 'Assessment', desc: 'Thorough testing using advanced tools and techniques' },
-                            { step: '03', title: 'Reporting', desc: 'Detailed documentation with actionable recommendations' },
-                            { step: '04', title: 'Support', desc: 'Ongoing guidance and retest validation' }
-                        ].map((item, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6, delay: index * 0.1 }}
-                                className="bg-cyber-dark rounded-xl p-6 border border-cyber-blue/20 hover:border-cyber-blue transition-all duration-300"
-                            >
-                                <div className="text-5xl font-bold gradient-text mb-4">{item.step}</div>
-                                <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
-                                <p className="text-gray-400">{item.desc}</p>
-                            </motion.div>
-                        ))}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6 }}
+                        >
+                            <div className="space-y-8">
+                                <div>
+                                    <h3 className="text-2xl font-bold text-white mb-4">Manual Testing Foundation</h3>
+                                    <p className="text-gray-300 leading-relaxed">
+                                        Automation is used only where it genuinely helps. All findings are manually validated. 
+                                        No false positives. No copied reports.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h3 className="text-2xl font-bold text-white mb-4">Attacker Perspective</h3>
+                                    <p className="text-gray-300 leading-relaxed">
+                                        We focus on understanding how an attacker would approach your system, 
+                                        what can realistically be exploited, and what the actual business impact is.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h3 className="text-2xl font-bold text-white mb-4">Clear Outcomes</h3>
+                                    <p className="text-gray-300 leading-relaxed">
+                                        Our goal is to give you clarity, not noise. We provide actionable recommendations 
+                                        that help you fix real security issues.
+                                    </p>
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, x: 30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6 }}
+                        >
+                            <div className="glass-effect rounded-2xl p-8 border border-blue-500/20">
+                                <FaEye className="text-6xl text-blue-500 mb-6" />
+                                <h3 className="text-2xl font-bold text-white mb-6">We Focus on Understanding:</h3>
+                                <ul className="space-y-4">
+                                    <li className="flex items-start space-x-3">
+                                        <FaArrowRight className="text-blue-500 mt-1 flex-shrink-0" />
+                                        <span className="text-gray-300">How an attacker would approach your system</span>
+                                    </li>
+                                    <li className="flex items-start space-x-3">
+                                        <FaArrowRight className="text-blue-500 mt-1 flex-shrink-0" />
+                                        <span className="text-gray-300">What can realistically be exploited</span>
+                                    </li>
+                                    <li className="flex items-start space-x-3">
+                                        <FaArrowRight className="text-blue-500 mt-1 flex-shrink-0" />
+                                        <span className="text-gray-300">What the actual business impact is</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </motion.div>
                     </div>
+                </div>
+            </section>
+
+            {/* CTA Section */}
+            <section className="py-20 bg-cyber-dark">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                        className="glass-effect rounded-2xl p-12 border border-blue-500/20"
+                    >
+                        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+                            Ready to Work with <span className="text-blue-400">Real Security Professionals</span>?
+                        </h2>
+                        <p className="text-xl text-gray-300 mb-10 leading-relaxed max-w-3xl mx-auto">
+                            If you want to understand your real security risks and address them properly, let's talk.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                            <Link
+                                to="/contact"
+                                className="magnetic-button glow-button inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full text-white font-bold text-lg transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/50"
+                            >
+                                <FaCheckCircle />
+                                Get Security Assessment
+                            </Link>
+                            <Link
+                                to="/pricing"
+                                className="magnetic-button inline-flex items-center gap-3 px-10 py-4 border-2 border-blue-500 hover:border-cyan-500 hover:bg-blue-500/10 rounded-full text-blue-500 hover:text-cyan-500 font-bold text-lg transition-all duration-300"
+                            >
+                                <FaArrowRight />
+                                View Pricing Models
+                            </Link>
+                        </div>
+                    </motion.div>
                 </div>
             </section>
         </div>

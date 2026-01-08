@@ -13,10 +13,13 @@ const Footer = () => {
                     <div className="space-y-4">
                         <div className="flex items-center space-x-3">
                             <FaShieldAlt className="text-3xl text-cyber-blue" />
-                            <span className="text-2xl font-bold gradient-text">CyberGuard</span>
+                            <span className="text-2xl font-bold gradient-text">HexaSentra</span>
                         </div>
                         <p className="text-gray-400 text-sm leading-relaxed">
-                            Elite cybersecurity expert specializing in penetration testing, bug bounty hunting, and comprehensive security solutions.
+                            Security Built by Hackers
+                        </p>
+                        <p className="text-gray-400 text-sm leading-relaxed">
+                            Cybersecurity & Penetration Testing Services
                         </p>
                         <div className="flex space-x-4">
                             <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">
@@ -39,13 +42,19 @@ const Footer = () => {
                                 <Link to="/" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">Home</Link>
                             </li>
                             <li>
-                                <Link to="/about" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">About Us</Link>
+                                <Link to="/about" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">About</Link>
                             </li>
                             <li>
                                 <Link to="/services" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">Services</Link>
                             </li>
                             <li>
-                                <Link to="/contact" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">Contact Us</Link>
+                                <Link to="/pricing" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">Pricing</Link>
+                            </li>
+                            <li>
+                                <Link to="/clients" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">Clients</Link>
+                            </li>
+                            <li>
+                                <Link to="/contact" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">Contact</Link>
                             </li>
                         </ul>
                     </div>
@@ -55,10 +64,10 @@ const Footer = () => {
                         <h3 className="text-xl font-bold text-white mb-4">Services</h3>
                         <ul className="space-y-2">
                             <li className="text-gray-400">Penetration Testing</li>
-                            <li className="text-gray-400">Bug Bounty Hunting</li>
-                            <li className="text-gray-400">Security Audits</li>
-                            <li className="text-gray-400">Vulnerability Assessment</li>
-                            <li className="text-gray-400">Security Consulting</li>
+                            <li className="text-gray-400">Enterprise Security Assessment</li>
+                            <li className="text-gray-400">Red Team Engagement</li>
+                            <li className="text-gray-400">Secure Code Review</li>
+                            <li className="text-gray-400">On-Call Pentester</li>
                         </ul>
                     </div>
 
@@ -68,15 +77,15 @@ const Footer = () => {
                         <ul className="space-y-3">
                             <li className="flex items-start space-x-3 text-gray-400">
                                 <FaEnvelope className="text-cyber-blue mt-1 flex-shrink-0" />
-                                <span>contact@cyberguard.com</span>
+                                <span>security@hexasentra.com</span>
                             </li>
                             <li className="flex items-start space-x-3 text-gray-400">
                                 <FaPhone className="text-cyber-blue mt-1 flex-shrink-0" />
-                                <span>+1 (555) 123-4567</span>
+                                <span>+91 9421939661</span>
                             </li>
                             <li className="flex items-start space-x-3 text-gray-400">
                                 <FaMapMarkerAlt className="text-cyber-blue mt-1 flex-shrink-0" />
-                                <span>123 Security Street, Cyber City, CC 12345</span>
+                                <span>Pune, Maharashtra, India</span>
                             </li>
                         </ul>
                     </div>
@@ -86,7 +95,7 @@ const Footer = () => {
                 <div className="mt-12 pt-8 border-t border-cyber-blue/20">
                     <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                         <p className="text-gray-400 text-sm">
-                            © {currentYear} CyberGuard. All rights reserved.
+                            © {currentYear} HexaSentra. All rights reserved.
                         </p>
                         <div className="flex space-x-6 text-sm">
                             <a href="/privacy" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">Privacy Policy</a>
