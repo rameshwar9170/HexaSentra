@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
@@ -38,8 +38,13 @@ const Home = () => {
     const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
     const scaleSpring = useSpring(scaleProgress, springConfig);
 
+    const statsRef = useRef(null);
+    const isStatsInView = useInView(statsRef, { once: true, margin: "-100px" });
+
     useEffect(() => {
-        const duration = 2000;
+        if (!isStatsInView) return;
+
+        const duration = 2500;
         const steps = 60;
         const interval = duration / steps;
 
@@ -64,7 +69,7 @@ const Home = () => {
         }, interval);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [isStatsInView]);
 
     // GSAP Horizontal Scroll Animation for Services - Enhanced Smoothness
     useEffect(() => {
@@ -122,6 +127,64 @@ const Home = () => {
 
         return () => {
             ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        };
+    }, []);
+
+    // Refs for magnetic buttons
+    const btn1Ref = useRef(null);
+    const btn2Ref = useRef(null);
+
+    // Magnetic Button Effect Logic
+    useEffect(() => {
+        const handleMagnetic = (e, ref) => {
+            if (!ref.current) return;
+            const btn = ref.current;
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            gsap.to(btn, {
+                x: x * 0.35,
+                y: y * 0.35,
+                duration: 0.6,
+                ease: "power2.out"
+            });
+        };
+
+        const resetMagnetic = (ref) => {
+            gsap.to(ref.current, {
+                x: 0,
+                y: 0,
+                duration: 0.8,
+                ease: "elastic.out(1, 0.3)"
+            });
+        };
+
+        const b1 = btn1Ref.current;
+        const b2 = btn2Ref.current;
+
+        const onMove1 = (e) => handleMagnetic(e, btn1Ref);
+        const onLeave1 = () => resetMagnetic(btn1Ref);
+        const onMove2 = (e) => handleMagnetic(e, btn2Ref);
+        const onLeave2 = () => resetMagnetic(btn2Ref);
+
+        if (b1) {
+            b1.addEventListener('mousemove', onMove1);
+            b1.addEventListener('mouseleave', onLeave1);
+        }
+        if (b2) {
+            b2.addEventListener('mousemove', onMove2);
+            b2.addEventListener('mouseleave', onLeave2);
+        }
+
+        return () => {
+            if (b1) {
+                b1.removeEventListener('mousemove', onMove1);
+                b1.removeEventListener('mouseleave', onLeave1);
+            }
+            if (b2) {
+                b2.removeEventListener('mousemove', onMove2);
+                b2.removeEventListener('mouseleave', onLeave2);
+            }
         };
     }, []);
 
@@ -343,289 +406,237 @@ const Home = () => {
                 style={{ scaleX: scrollYProgress }}
             />
 
-            {/* Hero Section with Parallax */}
-            <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-                {/* Animated Background */}
-                <motion.div
-                    className="absolute inset-0 bg-gradient-to-b from-cyber-darker via-cyber-dark to-cyber-darker"
-                    style={{ scale: scaleSpring }}
-                />
-
-                {/* Dynamic Blue Glow */}
-                <motion.div
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-blue-600/10 rounded-full blur-3xl"
-                    animate={{
-                        scale: [1, 1.1, 1],
-                        opacity: [0.3, 0.5, 0.3],
-                    }}
-                    transition={{
-                        duration: 8,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                    }}
-                />
-
-                {/* Floating Particles */}
-                <div className="absolute inset-0">
-                    {[...Array(20)].map((_, i) => (
-                        <motion.div
-                            key={i}
-                            className="particle absolute bg-blue-500/20 rounded-full"
-                            style={{
-                                width: Math.random() * 4 + 2 + 'px',
-                                height: Math.random() * 4 + 2 + 'px',
-                                left: Math.random() * 100 + '%',
-                                top: Math.random() * 100 + '%',
-                            }}
-                            animate={{
-                                y: [0, -30, 0],
-                                x: [0, Math.random() * 20 - 10, 0],
-                                opacity: [0.2, 0.8, 0.2],
-                                scale: [1, 1.2, 1],
-                            }}
-                            transition={{
-                                duration: Math.random() * 10 + 8,
-                                repeat: Infinity,
-                                ease: 'easeInOut',
-                                delay: Math.random() * 5,
-                            }}
-                        />
-                    ))}
+            {/* Hero Section with Cinematic Data Visuals */}
+            <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 bg-[#020617]">
+                {/* Cinematic Background Layer */}
+                <div className="absolute inset-0 z-0">
+                    <motion.div
+                        initial={{ scale: 1.1, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 0.4 }}
+                        transition={{ duration: 2, ease: "easeOut" }}
+                        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                        style={{ backgroundImage: 'url("/images/hero-premium-bg.png")' }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/40 via-[#020617]/60 to-[#020617]" />
+                    <div className="cyber-grid" />
                 </div>
 
-                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                {/* Animated Light Orbs */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <motion.div
-                        initial={{ opacity: 0, y: 50 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
-                    >
-                        {/* Status Badge with Animation */}
+                        animate={{
+                            x: [0, 100, 0],
+                            y: [0, -100, 0],
+                            scale: [1, 1.2, 1],
+                        }}
+                        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute top-[20%] left-[15%] w-96 h-96 bg-blue-600/20 rounded-full blur-[120px]"
+                    />
+                    <motion.div
+                        animate={{
+                            x: [0, -120, 0],
+                            y: [0, 80, 0],
+                            scale: [1, 1.3, 1],
+                        }}
+                        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] bg-emerald-600/10 rounded-full blur-[150px]"
+                    />
+                </div>
+
+                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-10">
+                    <div className="flex flex-col items-center">
+                        {/* Premium Status Badge */}
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                            className="inline-flex items-center gap-3 px-10 py-5 bg-white/5 border border-white/10 rounded-full mb-10 backdrop-blur-sm hover:bg-white/10 transition-all duration-500"
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
+                            className="glass-premier px-6 py-2 rounded-full mb-12 flex items-center gap-3 active-badge-glow"
                         >
-                            <motion.div
-                                className="w-3 h-3 bg-green-500 rounded-full shadow-lg shadow-green-500/50"
-                                animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
-                                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                            />
-                            <span className="text-base text-gray-300 font-semibold">Trusted by 500+ Organizations Worldwide</span>
+                            <span className="relative flex h-3 w-3">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                            </span>
+                            <span className="text-sm font-medium text-emerald-100/80 tracking-wide uppercase">
+                                Currently Securing 500+ Global Enterprises
+                            </span>
                         </motion.div>
 
-                        {/* Main Heading with Stagger Animation */}
-                        <motion.h1
-                            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 leading-tight"
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                        >
+                        {/* Main Cinematic Heading */}
+                        <h1 className="text-5xl md:text-7xl lg:text-9xl font-black mb-10 tracking-tighter text-white">
                             <motion.span
-                                className="text-white block mb-6"
-                                initial={{ opacity: 0, x: -50 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 1, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                                initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
+                                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                                transition={{ duration: 1, delay: 0.2 }}
+                                className="block leading-[0.9]"
                             >
-                                Break What Matters.
+                                BREAK WHAT
                             </motion.span>
                             <motion.span
-                                className="neon-text block text-shimmer"
-                                initial={{ opacity: 0, x: 50 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 1, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                                initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
+                                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                                transition={{ duration: 1, delay: 0.4 }}
+                                className="block leading-[0.9] text-shimmer"
                             >
-                                Secure What Counts.
+                                MATTERS.
                             </motion.span>
-                        </motion.h1>
+                            <motion.span
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 1, delay: 0.6 }}
+                                className="block mt-6 text-2xl md:text-4xl font-light tracking-[0.2em] text-blue-400 drop-shadow-[0_0_15px_rgba(37,99,235,0.5)]"
+                            >
+                                SECURE WHAT COUNTS.
+                            </motion.span>
+                        </h1>
 
-                        {/* Description with Typewriter Effect */}
+                        {/* High-Fidelity Description Section */}
                         <motion.div
-                            className="mb-12"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 1, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
+                            transition={{ duration: 1, delay: 0.8 }}
+                            className="max-w-3xl mb-16 space-y-6"
                         >
-                            <p className="text-base md:text-lg text-gray-300 mb-6 max-w-4xl mx-auto leading-relaxed">
-                                HexaSentra is a cybersecurity startup built by experienced penetration testers and security researchers
-                                from top global bug bounty platforms such as <span className="text-blue-400 font-semibold hover:text-blue-300 transition-colors">HackerOne</span>, <span className="text-blue-400 font-semibold hover:text-blue-300 transition-colors">Bugcrowd</span>, and <span className="text-blue-400 font-semibold hover:text-blue-300 transition-colors">Intigriti</span>.
+                            <p className="text-lg md:text-xl text-gray-300 leading-relaxed font-light">
+                                Built by world-class researchers from <span className="text-blue-400 font-semibold underline decoration-blue-500/30 underline-offset-4">HackerOne</span> & <span className="text-emerald-400 font-semibold underline decoration-emerald-500/30 underline-offset-4">Bugcrowd</span>.
+                                We don't just find bugs; we simulate real-world devastation to ensure absolute resilience.
                             </p>
-                            <p className="text-base md:text-lg text-gray-300 mb-8 max-w-4xl mx-auto leading-relaxed">
-                                We help companies uncover real security risks through manual penetration testing, attacker-style assessments,
-                                and practical security reviews. Our work focuses on how systems are actually abused, not how scanners describe them.
-                            </p>
-                            <motion.div
-                                className="glass-effect rounded-2xl p-8 border border-blue-500/20 inline-block"
-                                whileHover={{ scale: 1.05, boxShadow: "0 0 40px rgba(37, 99, 235, 0.4)" }}
-                                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                            >
-                                <p className="text-lg font-bold text-blue-400">
-                                    Security Built by Hackers
-                                </p>
-                            </motion.div>
-                        </motion.div>
 
-                        {/* CTA Buttons with Hover Effects */}
-                        <motion.div
-                            className="flex flex-col sm:flex-row gap-6 justify-center mb-20"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 1, delay: 1.3, ease: [0.16, 1, 0.3, 1] }}
-                        >
-                            <motion.div
-                                whileHover={{ scale: 1.08, y: -3 }}
-                                whileTap={{ scale: 0.95 }}
-                                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                            >
-                                <Link
-                                    to="/contact"
-                                    className="magnetic-button glow-button px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full text-white font-bold text-base transition-all duration-500 flex items-center justify-center gap-3 hover:shadow-2xl hover:shadow-blue-500/60"
+                            <div className="flex justify-center">
+                                <motion.div
+                                    whileHover={{ scale: 1.05 }}
+                                    className="glass-premier py-3 px-8 rounded-2xl border-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.05)]"
                                 >
-                                    <FaCheckCircle className="text-lg" />
-                                    Get Security Assessment
-                                </Link>
-                            </motion.div>
-                            <motion.div
-                                whileHover={{ scale: 1.08, y: -3 }}
-                                whileTap={{ scale: 0.95 }}
-                                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                            >
-                                <Link
-                                    to="/contact"
-                                    className="magnetic-button px-8 py-4 border-2 border-white/20 hover:border-blue-500/60 hover:bg-white/10 rounded-full text-white font-bold text-base transition-all duration-500 flex items-center justify-center gap-3"
-                                >
-                                    <FaPhone className="text-lg" />
-                                    Talk to a Pentester
-                                </Link>
-                            </motion.div>
-                        </motion.div>
-
-                        {/* Trusted By Section */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 1, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                            className="text-center"
-                        >
-                            <p className="text-gray-400 text-base mb-8 font-medium">Trusted by leading organizations across industries:</p>
-                            <div className="flex flex-wrap justify-center gap-4 text-gray-500 text-sm">
-                                {trustedBy.map((company, index) => (
-                                    <motion.span
-                                        key={index}
-                                        className="px-6 py-3 bg-white/5 rounded-full border border-white/10 backdrop-blur-sm hover:bg-white/10 hover:border-blue-500/30 transition-all duration-500"
-                                        initial={{ opacity: 0, scale: 0.8 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        transition={{ duration: 0.6, delay: 1.7 + index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                                        whileHover={{ scale: 1.08, y: -2, backgroundColor: "rgba(37, 99, 235, 0.15)" }}
-                                    >
-                                        {company}
-                                    </motion.span>
-                                ))}
+                                    <span className="text-emerald-400 font-bold uppercase tracking-widest text-xs">Security Built by Hackers</span>
+                                </motion.div>
                             </div>
                         </motion.div>
-                    </motion.div>
+
+                        {/* Impact CTA Section */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1, delay: 1 }}
+                            className="flex flex-col sm:flex-row gap-6 justify-center mb-16"
+                        >
+                            <Link
+                                ref={btn1Ref}
+                                to="/contact"
+                                className="magnetic-button group relative px-10 py-5 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-full text-white font-bold text-lg overflow-hidden flex items-center gap-3 shadow-[0_10px_40px_rgba(37,99,235,0.3)] hover:shadow-[0_15px_50px_rgba(37,99,235,0.5)] transition-all duration-300"
+                            >
+                                <span className="relative z-10 flex items-center gap-3">
+                                    <FaShieldAlt className="text-xl group-hover:rotate-12 transition-transform" />
+                                    Get Security Assessment
+                                </span>
+                                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <div className="absolute inset-0 shimmer-btn" />
+                            </Link>
+
+                            <Link
+                                ref={btn2Ref}
+                                to="/contact"
+                                className="magnetic-button group px-10 py-5 glass-premier rounded-full text-white font-bold text-lg flex items-center gap-3 border-blue-500/20 hover:border-blue-500/50 transition-all duration-300"
+                            >
+                                <FaPhone className="text-xl group-hover:-rotate-12 transition-transform text-blue-400" />
+                                Talk to a Pentester
+                            </Link>
+                        </motion.div>
+
+                        {/* Social Proof - Enhanced */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 0.6 }}
+                            transition={{ duration: 1, delay: 1.4 }}
+                            className="flex flex-wrap justify-center gap-x-12 gap-y-6"
+                        >
+                            {trustedBy.map((company, index) => (
+                                <span
+                                    key={index}
+                                    className="text-xs font-bold text-gray-400 uppercase tracking-widest hover:text-white transition-colors cursor-default"
+                                >
+                                    {company}
+                                </span>
+                            ))}
+                        </motion.div>
+                    </div>
                 </div>
 
-                {/* Animated Scroll Indicator */}
+                {/* Dynamic Scroll Indicator */}
                 <motion.div
-                    className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-                    animate={{ y: [0, 15, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
                     initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 2, duration: 1 }}
+                    className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
                 >
-                    <div className="w-8 h-12 border-2 border-white/30 rounded-full flex justify-center p-2">
-                        <motion.div
-                            className="w-2 h-3 bg-blue-500 rounded-full"
-                            animate={{ y: [0, 12, 0] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                        />
-                    </div>
+                    <span className="text-[10px] items-center gap-2 text-blue-500/50 font-bold tracking-[0.4em] uppercase">Scroll</span>
+                    <div className="w-[1px] h-12 bg-gradient-to-b from-blue-500 to-transparent" />
                 </motion.div>
             </section>
-            {/* Introduction Section with Parallax */}
-            <section className="py-20 bg-cyber-dark relative overflow-hidden">
-                <motion.div
-                    className="absolute inset-0 opacity-5"
-                    style={{ y: yProgress }}
-                >
-                    <div className="absolute inset-0" style={{
-                        backgroundImage: 'radial-gradient(circle, #2563eb 2px, transparent 2px)',
-                        backgroundSize: '100px 100px'
-                    }}></div>
-                </motion.div>
+            {/* Introduction Section with Premium Refinements */}
+            <section className="pt-32 pb-4 bg-[#020617] relative overflow-hidden z-20">
+                <div className="absolute inset-0 opacity-10">
+                    <div className="absolute inset-0 cyber-grid opacity-30"></div>
+                </div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <motion.div
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 0.8 }}
-                        className="text-center mb-16"
-                    >
-                        <motion.h2
-                            className="text-4xl md:text-6xl font-bold mb-8 text-white"
-                            initial={{ opacity: 0, scale: 0.8 }}
+                    <div className="text-center mb-24">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
+                            className="inline-block px-4 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-400 text-xs font-bold uppercase tracking-[0.3em] mb-8"
+                        >
+                            The New Standard of Security
+                        </motion.div>
+                        <motion.h2
+                            className="text-4xl md:text-6xl font-black mb-10 text-white tracking-tighter"
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 1 }}
                         >
                             Modern businesses move fast. <br />
-                            <span className="text-blue-400">Security issues today are rarely basic or obvious.</span>
+                            <span className="text-shimmer drop-shadow-[0_0_15px_rgba(37,99,235,0.3)]">Security issues today are rarely basic.</span>
                         </motion.h2>
                         <motion.p
-                            className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8"
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
+                            className="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto leading-relaxed font-light"
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
+                            transition={{ duration: 1, delay: 0.3 }}
                         >
-                            They exist in logic, access control, workflows, integrations, and design decisions.
+                            Vulnerabilities now hide in <span className="text-white font-medium">logic</span>, <span className="text-white font-medium">access control</span>, and <span className="text-white font-medium">design decisions</span>.
+                            We help you uncover the invisible before it becomes impossible.
                         </motion.p>
-                        <motion.p
-                            className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12"
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8, delay: 0.6 }}
-                        >
-                            HexaSentra was created to help organizations understand these risks clearly and fix them before they turn into incidents.
-                        </motion.p>
-                    </motion.div>
+                    </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <motion.div
                             initial={{ opacity: 0, x: -50 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
+                            transition={{ duration: 1 }}
                         >
-                            <h3 className="text-3xl font-bold text-white mb-8">We believe good security testing should:</h3>
-                            <div className="space-y-8">
+                            <h3 className="text-3xl font-bold text-white mb-10 tracking-tight">Our Core Philosophy:</h3>
+                            <div className="space-y-10">
                                 {[
-                                    { icon: <FaUsers />, title: "Be led by humans, not tools", desc: "Manual expertise identifies complex vulnerabilities that automated scanners miss" },
-                                    { icon: <FaArrowRight />, title: "Focus on real attack paths", desc: "Understanding how attackers actually exploit systems in the real world" },
-                                    { icon: <FaCheckCircle />, title: "Provide clear, actionable outcomes", desc: "Practical recommendations that help you fix issues effectively" }
+                                    { icon: <FaUsers className="text-emerald-400" />, title: "Human Intelligence First", desc: "Complex vulnerabilities require manual expertise that scanners simply cannot replicate." },
+                                    { icon: <FaBug className="text-blue-400" />, title: "Real Attack Simulation", desc: "We think like adversaries to test your defenses against real-world devastation." },
+                                    { icon: <FaCheckCircle className="text-indigo-400" />, title: "Actionable Resilience", desc: "We provide clear, strategic roadmaps to not just fix, but eliminate risks forever." }
                                 ].map((item, index) => (
                                     <motion.div
                                         key={index}
-                                        className="flex items-start space-x-4"
+                                        className="flex items-start gap-6 group"
                                         initial={{ opacity: 0, x: -20 }}
                                         whileInView={{ opacity: 1, x: 0 }}
                                         viewport={{ once: true }}
-                                        transition={{ duration: 0.6, delay: 0.4 + index * 0.2 }}
-                                        whileHover={{ x: 10 }}
+                                        transition={{ delay: index * 0.2 }}
                                     >
-                                        <motion.div
-                                            className="text-2xl text-blue-500 mt-1 flex-shrink-0"
-                                            whileHover={{ scale: 1.2, rotate: 5 }}
-                                        >
+                                        <div className="w-14 h-14 rounded-2xl glass-premier flex items-center justify-center text-3xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-lg shadow-black/20">
                                             {item.icon}
-                                        </motion.div>
-                                        <div>
-                                            <h4 className="text-xl font-semibold text-white mb-2">{item.title}</h4>
-                                            <p className="text-gray-400">{item.desc}</p>
+                                        </div>
+                                        <div className="flex-1">
+                                            <h4 className="text-xl font-bold text-white mb-3 tracking-tight group-hover:text-blue-400 transition-colors uppercase text-sm">{item.title}</h4>
+                                            <p className="text-gray-400 leading-relaxed font-light">{item.desc}</p>
                                         </div>
                                     </motion.div>
                                 ))}
@@ -633,92 +644,118 @@ const Home = () => {
                         </motion.div>
 
                         <motion.div
-                            initial={{ opacity: 0, x: 50 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
+                            transition={{ duration: 0.3 }}
                         >
+                            {/* Background Image */}
                             <motion.div
-                                className="glass-effect rounded-2xl p-8 border border-blue-500/20 text-center relative overflow-hidden"
-                                whileHover={{ scale: 1.02, boxShadow: "0 0 40px rgba(37, 99, 235, 0.2)" }}
-                                transition={{ duration: 0.3 }}
+                                className="absolute inset-0 opacity-10"
+                                initial={{ scale: 1.2 }}
+                                whileInView={{ scale: 1 }}
+                                transition={{ duration: 1.5 }}
                             >
-                                {/* Background Image */}
-                                <motion.div
-                                    className="absolute inset-0 opacity-10"
-                                    initial={{ scale: 1.2 }}
-                                    whileInView={{ scale: 1 }}
-                                    transition={{ duration: 1.5 }}
-                                >
-                                    <img src="/images/security-shield.png" alt="Security" className="w-full h-full object-cover" />
-                                </motion.div>
-
-                                <div className="relative z-10">
-                                    <motion.div
-                                        animate={{ rotate: [0, 5, -5, 0] }}
-                                        transition={{ duration: 4, repeat: Infinity }}
-                                    >
-                                        <FaShieldAlt className="text-6xl text-blue-500 mb-6 mx-auto" />
-                                    </motion.div>
-                                    <h3 className="text-2xl font-bold text-white mb-4">That is exactly how we work.</h3>
-                                    <p className="text-gray-300 leading-relaxed mb-6">
-                                        We are a startup by name, but our team members bring years of individual experience securing real production systems.
-                                    </p>
-                                    <div className="bg-cyber-darker rounded-lg p-4">
-                                        <p className="text-blue-400 font-semibold">
-                                            "Security is our daily work, not a side offering."
-                                        </p>
-                                    </div>
-                                </div>
+                                <img src="/images/security-shield.png" alt="Security" className="w-full h-full object-cover" />
                             </motion.div>
+
+                            <div className="relative z-10">
+                                <motion.div
+                                    animate={{ rotate: [0, 5, -5, 0] }}
+                                    transition={{ duration: 4, repeat: Infinity }}
+                                >
+                                    <FaShieldAlt className="text-6xl text-blue-500 mb-6 mx-auto" />
+                                </motion.div>
+                                <h3 className="text-2xl font-bold text-white mb-4">That is exactly how we work.</h3>
+                                <p className="text-gray-300 leading-relaxed mb-6">
+                                    We are a startup by name, but our team members bring years of individual experience securing real production systems.
+                                </p>
+                                <div className="bg-cyber-darker rounded-lg p-4">
+                                    <p className="text-blue-400 font-semibold">
+                                        "Security is our daily work, not a side offering."
+                                    </p>
+                                </div>
+                            </div>
                         </motion.div>
                     </div>
                 </div>
             </section>
 
-            {/* Stats Section with Counter Animation */}
-            <section className="py-20 bg-cyber-darker relative overflow-hidden">
+            {/* Stats Section with Counter Animation - REDESIGNED & COMPACT */}
+            <section ref={statsRef} className="pb-24 pt-4 md:pb-32 md:pt-0 bg-[#020617] relative overflow-hidden z-10">
+                {/* Dynamic Background Image */}
+                <div className="absolute inset-0 z-0">
+                    <motion.div
+                        initial={{ scale: 1.2, opacity: 0 }}
+                        whileInView={{ scale: 1, opacity: 0.2 }}
+                        transition={{ duration: 1.5 }}
+                        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                        style={{ backgroundImage: 'url("/images/impact-numbers-bg.png")' }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#020617] via-transparent to-[#020617]" />
+                </div>
+
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8 }}
-                        className="text-center mb-12"
+                        className="text-center mb-16"
                     >
-                        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                            Proven <span className="text-blue-400">Track Record</span>
+                        <motion.div
+                            initial={{ width: 0 }}
+                            whileInView={{ width: "60px" }}
+                            className="h-[2px] bg-blue-500 mx-auto mb-4"
+                        />
+                        <h2 className="text-4xl md:text-5xl font-black mb-4 text-white tracking-widest uppercase">
+                            Global <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Impact</span>
                         </h2>
+                        <p className="text-gray-400 text-xs tracking-[0.3em] uppercase font-bold">Scaling Excellence</p>
                     </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
                         {[
-                            { key: 'clients', label: 'Clients Secured', suffix: '+' },
-                            { key: 'vulnerabilities', label: 'Vulnerabilities Found', suffix: '+' },
-                            { key: 'uptime', label: 'Service Uptime', suffix: '%' },
-                            { key: 'satisfaction', label: 'Client Satisfaction', suffix: '%' }
+                            { key: 'clients', label: 'Global Clients', suffix: '+' },
+                            { key: 'vulnerabilities', label: 'Critical Bugs', suffix: '+' },
+                            { key: 'uptime', label: 'Platform Stability', suffix: '%' },
+                            { key: 'satisfaction', label: 'Client Retention', suffix: '%' }
                         ].map((stat, index) => (
                             <motion.div
                                 key={stat.key}
-                                initial={{ opacity: 0, y: 40, scale: 0.8 }}
-                                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                                initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                                whileInView={{ opacity: 1, scale: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ duration: 0.8, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                                whileHover={{ scale: 1.08, y: -8 }}
-                                className="text-center glass-effect rounded-3xl p-10 hover:bg-white/12 transition-all duration-500 cursor-pointer border-glow"
+                                transition={{
+                                    duration: 0.6,
+                                    delay: index * 0.1,
+                                    ease: "easeOut"
+                                }}
+                                whileHover={{ y: -8 }}
+                                className="group relative"
                             >
-                                <motion.div
-                                    className="text-5xl md:text-6xl font-bold text-blue-400 mb-4"
-                                    initial={{ scale: 0 }}
-                                    whileInView={{ scale: 1 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 1, delay: 0.5 + index * 0.12, type: "spring", bounce: 0.4 }}
-                                >
-                                    {stat.key === 'vulnerabilities' ? stats[stat.key].toLocaleString() :
-                                        stat.key === 'uptime' ? stats[stat.key].toFixed(1) :
-                                            stats[stat.key]}{stat.suffix}
-                                </motion.div>
-                                <div className="text-gray-400 font-semibold text-lg">{stat.label}</div>
+                                {/* Glowing Ambient Background */}
+                                <div className="absolute -inset-[2px] bg-gradient-to-br from-blue-500/20 via-cyan-500/10 to-transparent rounded-2xl md:rounded-3xl blur-md opacity-40 group-hover:opacity-100 transition-all duration-500" />
+
+                                <div className="relative h-full text-center glass-premier rounded-2xl md:rounded-3xl p-5 md:p-8 border border-white/5 group-hover:border-blue-500/30 transition-all duration-500 overflow-hidden">
+                                    {/* Glass Highlight */}
+                                    <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-10 transition-opacity" />
+
+                                    <motion.div
+                                        className="text-2xl md:text-5xl font-black mb-1 md:mb-2 tracking-tighter"
+                                        style={{ color: '#fff' }}
+                                    >
+                                        <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(37,99,235,0.3)]">
+                                            {stat.key === 'vulnerabilities' ? stats[stat.key].toLocaleString() :
+                                                stat.key === 'uptime' ? stats[stat.key].toFixed(1) :
+                                                    stats[stat.key]}{stat.suffix}
+                                        </span>
+                                    </motion.div>
+                                    <div className="text-gray-500 font-bold uppercase tracking-[0.15em] text-[8px] md:text-[10px] group-hover:text-blue-200 transition-colors">
+                                        {stat.label}
+                                    </div>
+
+                                    {/* Animated Corner Brackets */}
+                                    <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-blue-500/20 group-hover:border-blue-400 transition-colors" />
+                                    <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-blue-500/20 group-hover:border-blue-400 transition-colors" />
+                                </div>
                             </motion.div>
                         ))}
                     </div>
@@ -726,32 +763,32 @@ const Home = () => {
             </section>
 
             {/* Services Section with Horizontal Scroll */}
-            <section ref={servicesScrollRef} className="relative h-screen overflow-hidden bg-cyber-dark">
-                <div className="sticky top-0 h-screen flex flex-col justify-center">
+            <section ref={servicesScrollRef} className="relative h-screen overflow-hidden bg-[#020617] py-0 z-30">
+                <div className="sticky top-0 h-screen flex flex-col justify-center bg-[#020617] z-30 pt-24">
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 50 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                        className="text-center mb-12 px-4"
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                        className="text-center mb-10 px-4 relative z-40"
                     >
-                        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                            Our <span className="text-blue-400">Security Services</span>
+                        <h2 className="text-3xl md:text-5xl font-black mb-4 text-white tracking-tighter">
+                            Our <span className="text-blue-500">Security Services</span>
                         </h2>
-                        <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-4">
+                        <p className="text-sm md:text-base text-gray-400 max-w-2xl mx-auto mb-3">
                             Scroll horizontally to explore our comprehensive cybersecurity solutions
                         </p>
-                        <div className="flex items-center justify-center gap-2 text-blue-400">
-                            <FaArrowRight className="animate-pulse" />
-                            <span className="text-sm font-semibold">Scroll to explore</span>
+                        <div className="flex items-center justify-center gap-2 text-blue-500/60">
+                            <FaArrowRight className="animate-pulse text-xs" />
+                            <span className="text-[10px] uppercase font-bold tracking-[0.2em]">Scroll to explore</span>
                         </div>
                     </motion.div>
 
-                    <div ref={servicesContainerRef} className="flex gap-12 px-8 will-change-transform">
+                    <div ref={servicesContainerRef} className="flex gap-6 md:gap-8 px-6 md:px-10 will-change-transform pb-10">
                         {services.map((service, index) => (
                             <div
                                 key={index}
-                                className="flex-shrink-0 w-[480px] h-[650px] group perspective-1000"
+                                className="flex-shrink-0 w-[280px] h-[420px] md:w-[400px] md:h-[520px] group perspective-1000"
                             >
                                 <div className="relative h-full rounded-[2rem] overflow-hidden transform-gpu transition-all duration-1000 hover:scale-[1.08] hover:-rotate-2 shadow-2xl hover:shadow-blue-500/40">
                                     {/* Multi-layer Glassmorphism Background */}
@@ -775,37 +812,36 @@ const Home = () => {
                                     <div className="absolute inset-0 bg-radial-gradient from-transparent via-transparent to-cyber-darker/50 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
                                     {/* Content */}
-                                    <div className="relative h-full p-12 flex flex-col justify-between z-10">
+                                    <div className="relative h-full p-10 flex flex-col justify-between z-10">
                                         <div>
                                             {/* Icon with Enhanced 3D Effect */}
-                                            <div className="mb-10 transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-700 ease-out">
-                                                <div className={`text-8xl bg-gradient-to-br ${service.color} bg-clip-text text-transparent filter drop-shadow-[0_0_30px_rgba(37,99,235,0.5)]`}>
+                                            <div className="mb-6 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-700 ease-out">
+                                                <div className={`text-6xl bg-gradient-to-br ${service.color} bg-clip-text text-transparent filter drop-shadow-[0_0_20px_rgba(37,99,235,0.4)]`}>
                                                     {service.icon}
                                                 </div>
                                             </div>
 
                                             {/* Title with Better Typography */}
-                                            <h3 className="text-3xl font-bold text-white mb-6 group-hover:text-blue-400 transition-all duration-700 leading-tight tracking-tight">
+                                            <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-blue-400 transition-all duration-700 leading-tight tracking-tight">
                                                 {service.title}
                                             </h3>
 
                                             {/* Description with Better Readability */}
-                                            <p className="text-gray-300 group-hover:text-gray-100 leading-relaxed mb-10 text-base transition-all duration-700">
+                                            <p className="text-sm text-gray-400 group-hover:text-gray-200 leading-relaxed mb-6 transition-all duration-700 line-clamp-4">
                                                 {service.description}
                                             </p>
                                         </div>
 
-                                        {/* Features List with Stagger Effect */}
+                                        {/* Features List */}
                                         <div>
-                                            <ul className="space-y-4 mb-10">
+                                            <ul className="space-y-3 mb-8">
                                                 {service.features.map((feature, idx) => (
                                                     <li
                                                         key={idx}
-                                                        className="flex items-center space-x-3 text-sm text-gray-400 group-hover:text-gray-200 transition-all duration-500"
-                                                        style={{ transitionDelay: `${idx * 50}ms` }}
+                                                        className="flex items-center space-x-3 text-[13px] text-gray-500 group-hover:text-gray-300 transition-all duration-500"
                                                     >
-                                                        <div className={`flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-r ${service.color} flex items-center justify-center group-hover:scale-125 transition-transform duration-500`}>
-                                                            <FaCheckCircle className="text-white text-xs" />
+                                                        <div className={`flex-shrink-0 w-5 h-5 rounded-full bg-gradient-to-r ${service.color} flex items-center justify-center opacity-70 group-hover:opacity-100 transition-all`}>
+                                                            <FaCheckCircle className="text-white text-[10px]" />
                                                         </div>
                                                         <span className="font-medium">{feature}</span>
                                                     </li>
@@ -815,12 +851,10 @@ const Home = () => {
                                             {/* Enhanced CTA Button */}
                                             <Link
                                                 to="/services"
-                                                className={`inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r ${service.color} rounded-full text-white font-bold transition-all duration-700 hover:shadow-[0_0_40px_rgba(37,99,235,0.6)] hover:scale-105 group/link relative overflow-hidden`}
+                                                className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${service.color} rounded-full text-white text-xs font-bold transition-all duration-700 hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] group/link relative overflow-hidden uppercase tracking-widest`}
                                             >
-                                                <span className="relative z-10">Learn More</span>
-                                                <FaArrowRight className="text-sm group-hover/link:translate-x-2 transition-transform duration-500 relative z-10" />
-                                                {/* Button Shine Effect */}
-                                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover/link:translate-x-[200%] transition-transform duration-1000" />
+                                                <span className="relative z-10">View Details</span>
+                                                <FaArrowRight className="text-[10px] group-hover/link:translate-x-1 transition-transform duration-500 relative z-10" />
                                             </Link>
                                         </div>
                                     </div>
@@ -869,10 +903,10 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* Client Types Section */}
-            <section className="py-20 bg-cyber-darker relative overflow-hidden">
+            < section className="py-20 bg-cyber-darker relative overflow-hidden" >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -931,9 +965,9 @@ const Home = () => {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section >
             {/* Testimonials Section with Carousel */}
-            <section className="py-20 bg-cyber-dark relative overflow-hidden">
+            < section className="py-20 bg-cyber-dark relative overflow-hidden" >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -1024,111 +1058,78 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
 
-            {/* Pricing Highlights Section with Horizontal Scroll */}
-            <section ref={pricingScrollRef} className="relative h-screen overflow-hidden bg-cyber-darker">
+            {/* Pricing Highlights Section with Horizontal Scroll - REDESIGNED */}
+            <section ref={pricingScrollRef} className="relative h-screen overflow-hidden bg-[#020617] py-0 z-20">
                 <div className="sticky top-0 h-screen flex flex-col justify-center">
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 50 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                        className="text-center mb-12 px-4"
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                        className="text-center mb-10 px-4"
                     >
-                        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                            <span className="text-blue-400">Custom Pricing</span> for Real Security
+                        <h2 className="text-3xl md:text-5xl font-black mb-4 text-white tracking-tighter">
+                            <span className="text-blue-500">Custom Pricing</span> Models
                         </h2>
-                        <p className="text-xl text-gray-400 max-w-4xl mx-auto mb-4">
-                            Scroll horizontally to discover our flexible pricing approach
+                        <p className="text-sm md:text-base text-gray-400 max-w-2xl mx-auto mb-3">
+                            Tailored security engagements focused on quality and precision
                         </p>
-                        <div className="flex items-center justify-center gap-2 text-blue-400 mb-6">
-                            <FaArrowRight className="animate-pulse" />
-                            <span className="text-sm font-semibold">Scroll to explore</span>
+                        <div className="flex items-center justify-center gap-2 text-blue-500/60 mb-6">
+                            <FaArrowRight className="animate-pulse text-xs" />
+                            <span className="text-[10px] uppercase font-bold tracking-[0.2em]">Scroll to explore</span>
                         </div>
-                        <motion.div
-                            className="glass-effect rounded-2xl p-6 border border-blue-500/20 inline-block"
-                            whileHover={{ scale: 1.05 }}
-                        >
-                            <p className="text-lg font-semibold text-blue-400">Our focus is quality and accuracy, not volume.</p>
-                        </motion.div>
                     </motion.div>
 
-                    <div ref={pricingContainerRef} className="flex gap-8 px-8 will-change-transform">
+                    <div ref={pricingContainerRef} className="flex gap-6 md:gap-8 px-6 md:px-10 will-change-transform pb-10">
                         {pricingHighlights.map((highlight, index) => (
                             <div
                                 key={index}
-                                className="flex-shrink-0 w-[400px] h-[500px] group"
+                                className="flex-shrink-0 w-[280px] h-[400px] md:w-[380px] md:h-[480px] group perspective-1000"
                             >
-                                <div className="relative h-full rounded-3xl overflow-hidden transform-gpu transition-all duration-700 hover:scale-110 hover:rotate-2">
-                                    {/* Glassmorphism Background */}
-                                    <div className="absolute inset-0 bg-gradient-to-br from-cyber-dark/90 via-cyber-darker/80 to-cyber-dark/90 backdrop-blur-xl border border-white/10" />
+                                <div className="relative h-full rounded-[2rem] overflow-hidden transform-gpu transition-all duration-1000 hover:scale-[1.05] hover:rotate-1 shadow-2xl">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-cyber-darker/95 via-cyber-dark/85 to-cyber-darker/95 backdrop-blur-2xl" />
+                                    <div className={`absolute -inset-1 rounded-[2rem] bg-gradient-to-r from-blue-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-50 blur-2xl transition-all duration-1000`} />
+                                    <div className="absolute inset-0 rounded-[2rem] border border-white/5 group-hover:border-blue-500/30 transition-all duration-700" />
 
-                                    {/* Animated Gradient Overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-cyan-500/0 to-blue-500/0 group-hover:from-blue-500/20 group-hover:via-cyan-500/20 group-hover:to-blue-500/20 transition-all duration-700" />
-
-                                    {/* Glowing Border Effect */}
-                                    <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-40 blur-2xl transition-opacity duration-700" />
-
-                                    {/* Content */}
-                                    <div className="relative h-full p-10 flex flex-col items-center justify-center text-center z-10">
-                                        {/* Icon with 3D Effect */}
-                                        <div className="mb-8 transform group-hover:scale-125 group-hover:-rotate-12 transition-all duration-500">
-                                            <div className="text-7xl text-blue-500 filter drop-shadow-2xl">
+                                    <div className="relative h-full p-6 md:p-10 flex flex-col items-center justify-center text-center z-10">
+                                        <div className="mb-4 md:mb-6 transform group-hover:scale-110 group-hover:-rotate-6 transition-all duration-700">
+                                            <div className="text-4xl md:text-6xl text-blue-500 filter drop-shadow-[0_0_20px_rgba(37,99,235,0.4)]">
                                                 {highlight.icon}
                                             </div>
                                         </div>
-
-                                        {/* Title */}
-                                        <h3 className="text-2xl font-bold text-white mb-6 group-hover:text-blue-400 transition-colors duration-500">
+                                        <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-4 group-hover:text-blue-400 transition-colors duration-700 leading-tight">
                                             {highlight.title}
                                         </h3>
-
-                                        {/* Description */}
-                                        <p className="text-gray-300 leading-relaxed text-base group-hover:text-white transition-colors duration-500">
+                                        <p className="text-[10px] md:text-sm text-gray-400 group-hover:text-gray-200 leading-relaxed mb-4 md:mb-6 transition-colors duration-700">
                                             {highlight.description}
                                         </p>
 
-                                        {/* Decorative Elements */}
-                                        <div className="absolute top-4 right-4 w-20 h-20 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/30 transition-all duration-700" />
-                                        <div className="absolute bottom-4 left-4 w-16 h-16 bg-cyan-500/10 rounded-full blur-xl group-hover:bg-cyan-500/30 transition-all duration-700" />
-                                    </div>
-
-                                    {/* Floating Particles */}
-                                    <div className="absolute inset-0 pointer-events-none">
-                                        {[...Array(3)].map((_, i) => (
-                                            <div
-                                                key={i}
-                                                className="absolute w-1.5 h-1.5 bg-blue-400/40 rounded-full animate-float"
-                                                style={{
-                                                    left: `${20 + Math.random() * 60}%`,
-                                                    top: `${20 + Math.random() * 60}%`,
-                                                    animationDelay: `${i * 0.7}s`,
-                                                    animationDuration: `${4 + Math.random() * 2}s`
-                                                }}
-                                            />
-                                        ))}
+                                        {/* Decorative Micro-details */}
+                                        <div className="absolute top-4 right-4 w-4 h-[1px] bg-blue-500/20" />
+                                        <div className="absolute top-4 right-4 h-4 w-[1px] bg-blue-500/20" />
                                     </div>
                                 </div>
                             </div>
                         ))}
 
-                        {/* End Card - CTA */}
-                        <div className="flex-shrink-0 w-[400px] h-[500px] flex items-center justify-center">
-                            <div className="glass-effect rounded-3xl p-10 border border-blue-500/20 text-center hover:border-blue-500/40 transition-all duration-500 h-full flex flex-col justify-center">
-                                <FaArrowRight className="text-6xl text-blue-500 mb-6 mx-auto animate-pulse" />
-                                <h3 className="text-3xl font-bold text-white mb-6">
+                        {/* End Card - CTA - Redesigned */}
+                        <div className="flex-shrink-0 w-[240px] h-[360px] md:w-[380px] md:h-[480px] flex items-center justify-center">
+                            <div className="glass-premier rounded-[2rem] p-6 md:p-10 border border-blue-500/20 text-center hover:border-blue-500/40 transition-all duration-700 h-full flex flex-col justify-center items-center relative overflow-hidden group">
+                                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <FaArrowRight className="text-3xl md:text-5xl text-blue-500 mb-4 md:mb-6 group-hover:translate-x-3 transition-transform duration-500" />
+                                <h3 className="text-lg md:text-2xl font-black text-white mb-3 md:mb-4 tracking-tighter uppercase">
                                     Get Custom Quote
                                 </h3>
-                                <p className="text-gray-400 mb-8 text-base">
-                                    Every engagement is tailored to your specific needs and security requirements.
+                                <p className="text-[8px] md:text-xs text-gray-400 mb-6 md:mb-8 tracking-widest leading-relaxed uppercase">
+                                    Tailored specifically for you
                                 </p>
                                 <Link
                                     to="/pricing"
-                                    className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full text-white font-semibold text-lg transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/50"
+                                    className="px-6 py-2 md:px-8 md:py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full text-white text-[8px] md:text-xs font-black transition-all duration-500 hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] uppercase tracking-widest relative z-10"
                                 >
-                                    <FaArrowRight />
-                                    View Pricing Models
+                                    Explore
                                 </Link>
                             </div>
                         </div>
@@ -1136,98 +1137,90 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Process Section with Timeline */}
-            <section className="py-20 bg-cyber-dark relative overflow-hidden">
+            {/* Process Section with Timeline - REDESIGNED */}
+            <section className="py-24 bg-[#020617] relative overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8 }}
-                        className="text-center mb-16"
+                        className="text-center mb-20"
                     >
-                        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                            Our <span className="text-blue-400">Proven Process</span>
+                        <motion.div
+                            initial={{ width: 0 }}
+                            whileInView={{ width: "60px" }}
+                            className="h-[2px] bg-blue-500 mx-auto mb-4"
+                        />
+                        <h2 className="text-3xl md:text-5xl font-black mb-4 text-white tracking-widest uppercase">
+                            The <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Process</span>
                         </h2>
-                        <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                            A systematic approach to identifying and mitigating security risks
-                        </p>
+                        <p className="text-gray-400 text-xs tracking-[0.3em] font-bold uppercase">Systematic Security Excellence</p>
                     </motion.div>
 
                     <div className="relative">
-                        {/* Timeline Line */}
-                        <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-blue-500 to-cyan-500 hidden lg:block"></div>
+                        {/* Center Timeline Line */}
+                        <div className="absolute left-1/2 transform -translate-x-1/2 w-[1px] h-full bg-gradient-to-b from-blue-500/0 via-blue-500/50 to-blue-500/0 hidden lg:block" />
 
-                        <div className="space-y-12">
+                        <div className="space-y-16">
                             {[
                                 {
                                     step: '01',
-                                    title: 'Discovery & Scoping',
-                                    desc: 'We understand your environment, objectives, and compliance requirements to create a custom engagement scope.',
+                                    title: 'Scoping',
+                                    desc: 'Environment analysis and compliance mapping.',
                                     icon: <FaSearch />,
                                     side: 'left'
                                 },
                                 {
                                     step: '02',
-                                    title: 'Manual Testing',
-                                    desc: 'Our experts conduct thorough manual testing using advanced techniques to simulate real-world attacks.',
+                                    title: 'Testing',
+                                    desc: 'Deep manual exploitation and vulnerability research.',
                                     icon: <FaBug />,
                                     side: 'right'
                                 },
                                 {
                                     step: '03',
-                                    title: 'Detailed Reporting',
-                                    desc: 'Comprehensive documentation with validated findings, impact analysis, and actionable remediation guidance.',
+                                    title: 'Reporting',
+                                    desc: 'Actionable remediation guidance and impact analysis.',
                                     icon: <FaCheckCircle />,
                                     side: 'left'
                                 },
                                 {
                                     step: '04',
-                                    title: 'Ongoing Support',
-                                    desc: 'Continuous guidance, retest validation, and support to ensure your security posture remains strong.',
+                                    title: 'Support',
+                                    desc: 'Continuous guidance and retest validation.',
                                     icon: <FaUsers />,
                                     side: 'right'
                                 }
                             ].map((item, index) => (
                                 <motion.div
                                     key={index}
-                                    initial={{ opacity: 0, x: item.side === 'left' ? -50 : 50 }}
+                                    initial={{ opacity: 0, x: item.side === 'left' ? -30 : 30 }}
                                     whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: true }}
-                                    transition={{ duration: 0.8, delay: index * 0.2 }}
-                                    className={`flex items-center ${item.side === 'right' ? 'lg:flex-row-reverse' : ''} lg:justify-center`}
+                                    transition={{ duration: 0.8, delay: index * 0.1 }}
+                                    className={`flex items-center ${item.side === 'right' ? 'lg:flex-row-reverse' : ''} lg:justify-center relative group`}
                                 >
-                                    <div className={`lg:w-5/12 ${item.side === 'right' ? 'lg:text-right lg:pr-8' : 'lg:pl-8'}`}>
-                                        <motion.div
-                                            className="bg-cyber-darker rounded-2xl p-8 border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300"
-                                            whileHover={{ scale: 1.02, y: -5 }}
-                                        >
-                                            <div className="flex items-center space-x-4 mb-4">
-                                                <motion.div
-                                                    className="text-4xl text-blue-500"
-                                                    whileHover={{ rotate: 360 }}
-                                                    transition={{ duration: 0.6 }}
-                                                >
-                                                    {item.icon}
-                                                </motion.div>
-                                                <div className="text-3xl font-bold gradient-text">{item.step}</div>
+                                    <div className={`lg:w-5/12 ${item.side === 'right' ? 'lg:text-right lg:pr-12' : 'lg:pl-12'}`}>
+                                        <div className="relative group">
+                                            <div className="absolute -inset-1 bg-gradient-to-br from-blue-500/20 to-transparent rounded-2xl blur-sm opacity-50 group-hover:opacity-100 transition-opacity" />
+                                            <div className="relative glass-premier rounded-2xl p-6 md:p-8 border border-white/5 hover:border-blue-500/30 transition-all duration-500">
+                                                <div className={`flex items-center gap-4 mb-4 ${item.side === 'right' ? 'lg:flex-row-reverse' : ''}`}>
+                                                    <div className="text-3xl text-blue-500 group-hover:scale-110 transition-transform">
+                                                        {item.icon}
+                                                    </div>
+                                                    <div className="text-2xl font-black gradient-text opacity-50">{item.step}</div>
+                                                </div>
+                                                <h3 className="text-lg font-black text-white mb-2 tracking-widest uppercase">{item.title}</h3>
+                                                <p className="text-xs text-gray-400 leading-relaxed uppercase tracking-wider">{item.desc}</p>
                                             </div>
-                                            <h3 className="text-xl font-bold text-white mb-4">{item.title}</h3>
-                                            <p className="text-gray-400 leading-relaxed">{item.desc}</p>
-                                        </motion.div>
+                                        </div>
                                     </div>
 
-                                    {/* Timeline Node */}
-                                    <motion.div
-                                        className="hidden lg:flex w-6 h-6 bg-blue-500 rounded-full border-4 border-cyber-dark z-10 mx-4"
-                                        initial={{ scale: 0 }}
-                                        whileInView={{ scale: 1 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.5, delay: index * 0.2 + 0.3 }}
-                                        whileHover={{ scale: 1.5 }}
-                                    />
+                                    {/* Timeline Central Node */}
+                                    <div className="hidden lg:flex w-4 h-4 rounded-full bg-blue-500 border-[3px] border-[#020617] z-10 mx-6 group-hover:scale-150 group-hover:shadow-[0_0_15px_rgba(37,99,235,0.8)] transition-all duration-500" />
 
-                                    <div className="lg:w-5/12"></div>
+                                    <div className="lg:w-5/12" />
                                 </motion.div>
                             ))}
                         </div>
@@ -1235,201 +1228,8 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* About Us - Who We Are Section */}
-            <section className="py-20 bg-cyber-dark relative overflow-hidden">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                        className="text-center mb-16"
-                    >
-                        <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                            About <span className="text-blue-400">HexaSentra</span>
-                        </h2>
-                        <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                            Cybersecurity & Penetration Testing Company
-                        </p>
-                    </motion.div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
-                        <motion.div
-                            initial={{ opacity: 0, x: -30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                        >
-                            <h3 className="text-3xl md:text-4xl font-bold mb-6 text-white">
-                                Who <span className="text-blue-400">We Are</span>
-                            </h3>
-                            <div className="space-y-6">
-                                <p className="text-lg text-gray-300 leading-relaxed">
-                                    Our team includes security professionals who have spent years finding critical vulnerabilities
-                                    across real-world systems on leading bug bounty platforms and private security engagements.
-                                </p>
-                                <p className="text-lg text-gray-300 leading-relaxed">
-                                    While HexaSentra is a new company, our people are not new to security testing.
-                                </p>
-                                <div className="glass-effect rounded-2xl p-6 border border-blue-500/20">
-                                    <p className="text-xl font-semibold text-blue-400 text-center">
-                                        "Security is our daily work, not a side offering."
-                                    </p>
-                                </div>
-                            </div>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, x: 30, scale: 0.9 }}
-                            whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8 }}
-                            className="relative"
-                        >
-                            {/* Team Collaboration Image */}
-                            <motion.div
-                                className="rounded-2xl overflow-hidden border-2 border-blue-500/20 shadow-2xl shadow-blue-500/20"
-                                whileHover={{ scale: 1.05, borderColor: "rgba(37, 99, 235, 0.4)" }}
-                                transition={{ duration: 0.5 }}
-                            >
-                                <img
-                                    src="/images/team-collaboration.png"
-                                    alt="Team Collaboration"
-                                    className="w-full h-auto"
-                                />
-                            </motion.div>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, x: 30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                            className="lg:hidden"
-                        >
-                            <div className="glass-effect rounded-2xl p-8 border border-blue-500/20">
-                                <h4 className="text-2xl font-bold text-white mb-6">We Bring:</h4>
-                                <div className="space-y-6">
-                                    {[
-                                        { icon: <FaBug />, title: 'Attacker mindset', desc: 'We think like attackers to identify real-world vulnerabilities and attack paths.' },
-                                        { icon: <FaEye />, title: 'Manual testing expertise', desc: 'Deep expertise in manual security testing that goes beyond automated scanning.' },
-                                        { icon: <FaUsers />, title: 'Clear technical communication', desc: 'We explain complex security issues in clear, actionable terms for technical and business teams.' },
-                                        { icon: <FaShieldAlt />, title: 'Professional engagement handling', desc: 'Confidential, responsible, and professional approach to every security engagement.' }
-                                    ].map((item, index) => (
-                                        <div key={index} className="flex items-start space-x-4">
-                                            <div className="text-2xl text-blue-500 mt-1">
-                                                {item.icon}
-                                            </div>
-                                            <div>
-                                                <h5 className="text-lg font-semibold text-white mb-2">{item.title}</h5>
-                                                <p className="text-gray-400">{item.desc}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Detailed Pricing Section */}
-            <section className="py-20 bg-cyber-darker relative overflow-hidden">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                        className="text-center mb-16">
-                        <h2 className="text-4xl md:text-6xl font-bold mb-6">
-                            <span className="gradient-text">Pricing Models</span>
-                        </h2>
-                        <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
-                            Every system is different. Every attack surface is different. That's why HexaSentra does custom-scoped security engagements instead of one-size-fits-all pricing.
-                        </p>
-                        <div className="glass-effect rounded-2xl p-8 border border-blue-500/20 inline-block">
-                            <p className="text-xl font-semibold text-blue-400">Our focus is quality and accuracy, not volume.</p>
-                        </div>
-                    </motion.div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-                        {[
-                            { icon: <FaSearch />, title: 'Scope and complexity', desc: 'The breadth and depth of systems to be tested' },
-                            { icon: <FaServer />, title: 'Type of systems involved', desc: 'Web apps, mobile apps, infrastructure, or cloud environments' },
-                            { icon: <FaLock />, title: 'Depth of manual testing required', desc: 'Level of manual verification and custom attack scenarios' },
-                            { icon: <FaClock />, title: 'Engagement duration', desc: 'Timeline requirements and project complexity' }
-                        ].map((factor, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6, delay: index * 0.1 }}
-                                className="card-hover bg-cyber-dark rounded-2xl p-8 text-center"
-                            >
-                                <div className="text-5xl text-blue-500 mb-6 flex justify-center">
-                                    {factor.icon}
-                                </div>
-                                <h3 className="text-xl font-bold text-white mb-4">{factor.title}</h3>
-                                <p className="text-gray-400 leading-relaxed">{factor.desc}</p>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Client Portfolio Section */}
-            <section className="py-20 bg-cyber-dark relative overflow-hidden">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                        className="text-center mb-16"
-                    >
-                        <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                            Client <span className="text-blue-400">Success Stories</span>
-                        </h2>
-                        <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
-                            We work with diverse organizations, each with unique security challenges
-                        </p>
-                        <div className="glass-effect rounded-2xl p-6 border border-blue-500/20 inline-block">
-                            <p className="text-lg font-semibold text-blue-400">
-                                Client names and details are kept confidential unless explicitly approved
-                            </p>
-                        </div>
-                    </motion.div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-                        {[
-                            { icon: <FaLock />, title: 'Strict Confidentiality', desc: 'All client information is kept strictly confidential with comprehensive NDAs and security protocols.' },
-                            { icon: <FaUserSecret />, title: 'Professional Discretion', desc: 'Our team maintains the highest standards of professional discretion in all engagements.' },
-                            { icon: <FaShieldAlt />, title: 'Secure Handling', desc: 'Client data and findings are handled with enterprise-grade security measures and access controls.' },
-                            { icon: <FaEye />, title: 'Transparent Process', desc: 'While maintaining confidentiality, we provide full transparency in our testing methodologies and findings.' }
-                        ].map((feature, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6, delay: index * 0.1 }}
-                                className="card-hover bg-cyber-darker rounded-2xl p-8 text-center"
-                            >
-                                <div className="text-4xl text-blue-500 mb-6 flex justify-center">
-                                    {feature.icon}
-                                </div>
-                                <h3 className="text-lg font-bold text-white mb-4">{feature.title}</h3>
-                                <p className="text-gray-400 leading-relaxed">{feature.desc}</p>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Contact Information Section */}
-            <section className="py-20 bg-cyber-darker relative overflow-hidden">
+            {/* About Us - REDESIGNED */}
+            <section className="py-24 bg-[#020617] relative overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -1438,47 +1238,220 @@ const Home = () => {
                         transition={{ duration: 0.8 }}
                         className="text-center mb-16"
                     >
-                        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                            Talk to Real <span className="text-blue-400">Security Professionals</span>
+                        <motion.div
+                            initial={{ width: 0 }}
+                            whileInView={{ width: "60px" }}
+                            className="h-[2px] bg-blue-500 mx-auto mb-4"
+                        />
+                        <h2 className="text-3xl md:text-5xl font-black mb-4 text-white tracking-widest uppercase">
+                            The <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Story</span>
                         </h2>
-                        <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                            Ready to secure your organization? Get in touch with our expert team.
+                        <p className="text-gray-400 text-xs tracking-[0.3em] font-bold uppercase">Built by Researchers</p>
+                    </motion.div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                        >
+                            <h3 className="text-2xl font-black text-white mb-6 uppercase tracking-widest leading-tight">
+                                Expert <span className="text-blue-500">Pedigree</span>
+                            </h3>
+                            <div className="space-y-6">
+                                <p className="text-sm text-gray-400 leading-relaxed uppercase tracking-wider">
+                                    Our team consists of researchers from elite platforms like HackerOne and Bugcrowd, bringing decades of combined manual exploitation experience.
+                                </p>
+                                <div className="glass-premier rounded-2xl p-6 border border-white/5 relative overflow-hidden group">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    <p className="text-lg font-black text-blue-400 italic leading-tight text-center relative z-10 uppercase tracking-tighter">
+                                        "Security is our pulse, not a protocol."
+                                    </p>
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                            className="relative group"
+                        >
+                            <div className="absolute -inset-4 bg-blue-500/10 rounded-[3rem] blur-3xl group-hover:bg-blue-500/20 transition-all duration-1000" />
+                            <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+                                <img
+                                    src="/images/team-collaboration.png"
+                                    alt="Research Lab"
+                                    className="w-full h-auto grayscale group-hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-60" />
+                            </div>
+                        </motion.div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Detailed Pricing Section - REDESIGNED */}
+            <section className="py-24 bg-[#020617] relative overflow-hidden">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                        className="text-center mb-16"
+                    >
+                        <motion.div
+                            initial={{ width: 0 }}
+                            whileInView={{ width: "60px" }}
+                            className="h-[2px] bg-blue-500 mx-auto mb-4"
+                        />
+                        <h2 className="text-3xl md:text-5xl font-black mb-4 text-white tracking-widest uppercase">
+                            Pricing <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Models</span>
+                        </h2>
+                        <p className="text-gray-400 text-sm tracking-[0.2em] font-light max-w-2xl mx-auto mb-10 leading-relaxed uppercase">
+                            Custom-scoped engagements tailored to your attack surface
                         </p>
                     </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-16">
+                        {[
+                            { icon: <FaSearch />, title: 'Scoping', desc: 'Breadth of systems to be thoroughly tested' },
+                            { icon: <FaServer />, title: 'Environment', desc: 'Infrastructures, Cloud, or App surfaces' },
+                            { icon: <FaLock />, title: 'Depth', desc: 'Manual verification & custom attack logic' },
+                            { icon: <FaClock />, title: 'Timeline', desc: 'Engagement duration & urgency level' }
+                        ].map((factor, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.6, delay: index * 0.1 }}
+                                className="group relative"
+                            >
+                                <div className="absolute -inset-[1px] bg-gradient-to-br from-blue-500/20 to-transparent rounded-2xl md:rounded-3xl blur-sm opacity-50 transition-opacity" />
+                                <div className="relative h-full text-center glass-premier rounded-2xl md:rounded-3xl p-5 md:p-8 border border-white/5 hover:border-blue-500/30 transition-all duration-500 overflow-hidden">
+                                    <div className="text-4xl text-blue-500 mb-4 flex justify-center group-hover:scale-110 transition-transform duration-500">
+                                        {factor.icon}
+                                    </div>
+                                    <h3 className="text-sm md:text-lg font-bold text-white mb-2 md:mb-4 group-hover:text-blue-400 transition-colors uppercase tracking-widest leading-tight">{factor.title}</h3>
+                                    <p className="text-[10px] md:text-xs text-gray-400 leading-relaxed opacity-80">{factor.desc}</p>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Client Portfolio Section - REDESIGNED */}
+            <section className="py-24 bg-[#020617] relative overflow-hidden">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                        className="text-center mb-16"
+                    >
+                        <motion.div
+                            initial={{ width: 0 }}
+                            whileInView={{ width: "60px" }}
+                            className="h-[2px] bg-blue-500 mx-auto mb-4"
+                        />
+                        <h2 className="text-3xl md:text-5xl font-black mb-4 text-white tracking-widest uppercase">
+                            Success <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Guaranteed</span>
+                        </h2>
+                        <p className="text-gray-400 text-[10px] md:text-sm tracking-[0.2em] font-light max-w-2xl mx-auto mb-10 leading-relaxed uppercase">
+                            Enterprise-grade confidentiality & professional research
+                        </p>
+                    </motion.div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-16">
+                        {[
+                            { icon: <FaLock />, title: 'Deep NDA', desc: 'Comprehensive legal frameworks for data.' },
+                            { icon: <FaUserSecret />, title: 'Discretion', desc: 'Highest standards of professional privacy.' },
+                            { icon: <FaShieldAlt />, title: 'Handling', desc: 'Enterprise-grade findings protection.' },
+                            { icon: <FaEye />, title: 'Transparency', desc: 'Methodical visibility in all testing.' }
+                        ].map((feature, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.6, delay: index * 0.1 }}
+                                className="group relative"
+                            >
+                                <div className="absolute -inset-[1px] bg-gradient-to-br from-blue-500/20 to-transparent rounded-2xl md:rounded-3xl blur-sm opacity-50 transition-opacity" />
+                                <div className="relative h-full text-center glass-premier rounded-2xl md:rounded-3xl p-5 md:p-8 border border-white/5 hover:border-blue-500/30 transition-all duration-500 overflow-hidden">
+                                    <div className="text-3xl text-blue-500 mb-4 flex justify-center group-hover:scale-110 transition-transform">
+                                        {feature.icon}
+                                    </div>
+                                    <h3 className="text-[10px] md:text-sm font-black text-white mb-2 md:mb-3 tracking-widest uppercase">{feature.title}</h3>
+                                    <p className="text-[8px] md:text-[10px] text-gray-400 leading-relaxed uppercase tracking-wider">{feature.desc}</p>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Contact Information Section - REDESIGNED */}
+            <section className="py-24 bg-[#020617] relative overflow-hidden">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                        className="text-center mb-16"
+                    >
+                        <motion.div
+                            initial={{ width: 0 }}
+                            whileInView={{ width: "60px" }}
+                            className="h-[2px] bg-blue-500 mx-auto mb-4"
+                        />
+                        <h2 className="text-3xl md:text-5xl font-black mb-4 text-white tracking-widest uppercase">
+                            Connect with <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Experts</span>
+                        </h2>
+                        <p className="text-gray-400 text-xs tracking-[0.3em] font-bold uppercase">Ready to secure your future</p>
+                    </motion.div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                         {[
                             { icon: <FaEnvelope />, title: 'Email', value: 'security@hexasentra.com', link: 'mailto:security@hexasentra.com' },
                             { icon: <FaPhone />, title: 'Phone', value: '+91 9421939661', link: 'tel:+919421939661' },
-                            { icon: <FaMapMarkerAlt />, title: 'Location', value: 'Pune, Maharashtra, India', link: '#' }
+                            { icon: <FaMapMarkerAlt />, title: 'Location', value: 'Pune, Maharashtra', link: '#' }
                         ].map((contact, index) => (
                             <motion.div
                                 key={index}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
+                                initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                                whileInView={{ opacity: 1, scale: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                                whileHover={{ y: -5, scale: 1.02 }}
-                                className="card-hover bg-cyber-dark rounded-2xl p-8 text-center"
+                                whileHover={{ y: -8 }}
+                                className="group relative"
                             >
-                                <motion.div
-                                    className="text-5xl text-blue-500 mb-6 flex justify-center"
-                                    whileHover={{ scale: 1.2, rotate: 5 }}
-                                    transition={{ duration: 0.3 }}
-                                >
-                                    {contact.icon}
-                                </motion.div>
-                                <h3 className="text-xl font-bold text-white mb-4">{contact.title}</h3>
-                                {contact.link !== '#' ? (
-                                    <a
-                                        href={contact.link}
-                                        className="text-gray-400 hover:text-blue-400 transition-colors duration-300 text-lg"
+                                <div className="absolute -inset-[1px] bg-gradient-to-br from-blue-500/20 to-transparent rounded-[2rem] blur-sm opacity-50 transition-opacity" />
+                                <div className="relative h-full text-center glass-premier rounded-[2rem] p-10 border border-white/5 hover:border-blue-500/30 transition-all duration-500 overflow-hidden">
+                                    <motion.div
+                                        className="text-5xl text-blue-500 mb-6 flex justify-center group-hover:scale-110 transition-transform duration-500"
                                     >
-                                        {contact.value}
-                                    </a>
-                                ) : (
-                                    <span className="text-gray-400 text-lg">{contact.value}</span>
-                                )}
+                                        {contact.icon}
+                                    </motion.div>
+                                    <h3 className="text-sm font-black text-white mb-2 tracking-widest uppercase">{contact.title}</h3>
+                                    {contact.link !== '#' ? (
+                                        <a
+                                            href={contact.link}
+                                            className="text-blue-400 hover:text-white transition-colors duration-300 text-[10px] md:text-sm font-medium tracking-wide break-all"
+                                        >
+                                            {contact.value}
+                                        </a>
+                                    ) : (
+                                        <span className="text-gray-400 text-[10px] md:text-sm font-medium tracking-wide">{contact.value}</span>
+                                    )}
+                                </div>
                             </motion.div>
                         ))}
                     </div>
