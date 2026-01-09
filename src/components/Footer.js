@@ -16,7 +16,7 @@ const Footer = () => {
                             <span className="text-2xl font-bold gradient-text">HexaSentra</span>
                         </div>
                         <p className="text-gray-400 text-sm leading-relaxed">
-                            Security Built by Hackers
+                            Security Built by Practitioners
                         </p>
                         <p className="text-gray-400 text-sm leading-relaxed">
                             Cybersecurity & Penetration Testing Services
@@ -77,12 +77,13 @@ const Footer = () => {
                         <ul className="space-y-3">
                             <li className="flex items-start space-x-3 text-gray-400">
                                 <FaEnvelope className="text-cyber-blue mt-1 flex-shrink-0" />
-                                <span>security@hexasentra.com</span>
+                                <div className="flex flex-col">
+                                    <span>contact@hexasentra.com</span>
+                                    <span>hello@hexasentra.com</span>
+                                    <span>security@hexasentra.com</span>
+                                </div>
                             </li>
-                            <li className="flex items-start space-x-3 text-gray-400">
-                                <FaPhone className="text-cyber-blue mt-1 flex-shrink-0" />
-                                <span>+91 9421939661</span>
-                            </li>
+
                             <li className="flex items-start space-x-3 text-gray-400">
                                 <FaMapMarkerAlt className="text-cyber-blue mt-1 flex-shrink-0" />
                                 <span>Pune, Maharashtra, India</span>

@@ -54,28 +54,7 @@ const About = () => {
         }
     ];
 
-    const achievements = [
-        {
-            number: '500+',
-            label: 'Organizations Secured',
-            description: 'From startups to Fortune 500 companies'
-        },
-        {
-            number: '10,000+',
-            label: 'Vulnerabilities Identified',
-            description: 'Critical security flaws discovered and remediated'
-        },
-        {
-            number: '99.9%',
-            label: 'Service Uptime',
-            description: 'Reliable and consistent security services'
-        },
-        {
-            number: '98%',
-            label: 'Client Satisfaction',
-            description: 'Trusted by leading organizations worldwide'
-        }
-    ];
+
 
     return (
         <div className="min-h-screen pt-20 bg-cyber-darker">
@@ -103,7 +82,7 @@ const About = () => {
                         </h2>
                         <div className="glass-effect rounded-2xl p-6 border border-blue-500/20 inline-block mb-8">
                             <p className="text-xl font-semibold text-blue-400">
-                                Security Built by Hackers
+                                Security Built by Practitioners
                             </p>
                         </div>
                         <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
@@ -129,8 +108,8 @@ const About = () => {
                             </h2>
                             <div className="space-y-6">
                                 <p className="text-lg text-gray-300 leading-relaxed">
-                                    Our team includes security professionals who have spent years finding critical vulnerabilities
-                                    across real-world systems on leading bug bounty platforms and private security engagements.
+                                    Our team includes experienced security professionals with years of hands-on testing in
+                                    real-world production environments.
                                 </p>
                                 <p className="text-lg text-gray-300 leading-relaxed">
                                     While HexaSentra is a new company, our people are not new to security testing.
@@ -294,48 +273,7 @@ const About = () => {
                 </div>
             </section>
 
-            {/* Achievements Section */}
-            <section className="py-20 bg-cyber-darker">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                        className="text-center mb-16"
-                    >
-                        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                            Our <span className="text-blue-400">Track Record</span>
-                        </h2>
-                        <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                            Numbers that speak to our commitment and expertise
-                        </p>
-                    </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {achievements.map((achievement, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6, delay: index * 0.1 }}
-                                className="text-center glass-effect rounded-2xl p-8 hover:bg-white/10 transition-all duration-300"
-                            >
-                                <div className="text-4xl md:text-5xl font-bold text-blue-400 mb-3">
-                                    {achievement.number}
-                                </div>
-                                <div className="text-lg font-semibold text-white mb-2">
-                                    {achievement.label}
-                                </div>
-                                <div className="text-gray-400 text-sm">
-                                    {achievement.description}
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
 
             {/* Location Section */}
             <section className="py-20 bg-cyber-dark">
@@ -386,13 +324,7 @@ const About = () => {
                                             <p className="text-gray-400">Pune, Maharashtra, India</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-start space-x-3">
-                                        <FaPhone className="text-blue-500 mt-1" />
-                                        <div>
-                                            <h4 className="text-white font-semibold">Phone</h4>
-                                            <p className="text-gray-400">+91 9421939661</p>
-                                        </div>
-                                    </div>
+
                                     <div className="flex items-start space-x-3">
                                         <FaShieldAlt className="text-blue-500 mt-1" />
                                         <div>

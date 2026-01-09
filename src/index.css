@@ -38,13 +38,44 @@ body {
   background: #3b82f6;
 }
 
-/* Gradient Text - ONLY BLUE */
+/* Gradient Text - PREMIER BLUE */
 .gradient-text {
-  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%);
+  background: linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #6366f1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-weight: 700;
+  font-weight: 800;
+}
+
+/* Cyber Grid Background */
+.cyber-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(37, 99, 235, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
+  z-index: 1;
+}
+
+/* Glassmorphism 2.0 */
+.glass-premier {
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+.glass-premier:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  background: rgba(15, 23, 42, 0.8);
+  box-shadow: 0 0 30px rgba(37, 99, 235, 0.15);
 }
 
 /* Scroll Reveal - Enhanced Smooth Animations */
@@ -189,16 +220,38 @@ body {
 
 /* Magnetic Button - Enhanced */
 .magnetic-button {
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
   will-change: transform;
 }
 
 .magnetic-button:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 .magnetic-button:active {
-  transform: scale(0.95);
+  transform: scale(0.96);
+}
+
+/* Shimmer Button Effect */
+@keyframes button-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.shimmer-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: button-shimmer 2s infinite;
 }
 
 /* Image Hover - Enhanced */
@@ -639,6 +692,26 @@ body {
 
 .animate-delay-700 {
   animation-delay: 0.7s;
+}
+
+/* Active Badge Glow */
+.active-badge-glow {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+  animation: badge-pulse 3s infinite;
+}
+
+@keyframes badge-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.2);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(16, 185, 129, 0.4);
+    border-color: rgba(16, 185, 129, 0.5);
+  }
 }
 
 .animate-delay-800 {

@@ -52,15 +52,10 @@ const Contact = () => {
         {
             icon: <FaEnvelope />,
             title: 'Email',
-            value: 'security@hexasentra.com',
-            link: 'mailto:security@hexasentra.com'
+            value: 'contact@hexasentra.com',
+            link: 'mailto:contact@hexasentra.com'
         },
-        {
-            icon: <FaPhone />,
-            title: 'Phone',
-            value: '+91 9421939661',
-            link: 'tel:+919421939661'
-        },
+
         {
             icon: <FaMapMarkerAlt />,
             title: 'Location',
@@ -70,7 +65,7 @@ const Contact = () => {
         {
             icon: <FaClock />,
             title: 'Response Time',
-            value: '24 Hours or Less',
+            value: 'We aim to respond as quickly as possible during business hours',
             link: '#'
         }
     ];
@@ -141,7 +136,7 @@ const Contact = () => {
                             Talk to Real Security Professionals
                         </h2>
                         <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                            If you want to understand your real security risks and address them properly, let us talk. 
+                            If you want to understand your real security risks and address them properly, let us talk.
                             Remote and on-site engagements available.
                         </p>
                     </motion.div>
@@ -162,7 +157,7 @@ const Contact = () => {
                                 className="glass-effect rounded-2xl p-8 border border-blue-500/20"
                             >
                                 <h3 className="text-3xl font-bold text-white mb-8">Security Assessment Request</h3>
-                                
+
                                 {submitted ? (
                                     <motion.div
                                         initial={{ opacity: 0, scale: 0.9 }}
@@ -172,7 +167,7 @@ const Contact = () => {
                                         <FaCheckCircle className="text-6xl text-green-500 mx-auto mb-6" />
                                         <h4 className="text-2xl font-bold text-white mb-4">Request Submitted!</h4>
                                         <p className="text-gray-300">
-                                            Thank you for your interest in HexaSentra. Our security experts will review your 
+                                            Thank you for your interest in HexaSentra. Our security experts will review your
                                             request and respond within 24 hours with a recommended engagement plan.
                                         </p>
                                     </motion.div>
@@ -381,15 +376,7 @@ const Contact = () => {
                                     </div>
                                 </div>
 
-                                <div className="glass-effect rounded-2xl p-8 border border-green-500/20">
-                                    <div className="text-center">
-                                        <FaShieldAlt className="text-4xl text-green-500 mx-auto mb-4" />
-                                        <h3 className="text-xl font-bold text-white mb-2">Trusted by 500+ Organizations</h3>
-                                        <p className="text-gray-400 text-sm">
-                                            Join leading companies that trust HexaSentra to protect their critical assets
-                                        </p>
-                                    </div>
-                                </div>
+
                             </motion.div>
                         </div>
                     </div>
@@ -422,7 +409,7 @@ const Contact = () => {
                             <FaPhone className="text-5xl text-blue-500 mb-6 mx-auto" />
                             <h3 className="text-2xl font-bold text-white mb-4">Emergency Response</h3>
                             <p className="text-gray-400 mb-6">
-                                Need immediate security assistance? Our emergency response team is available 24/7.
+                                Emergency support can be discussed for active security incidents.
                             </p>
                             <a
                                 href="tel:+15551234392"

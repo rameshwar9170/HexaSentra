@@ -122,7 +122,7 @@ const Services = () => {
         {
             icon: <FaUsers />,
             title: 'Team of experienced hackers and security researchers',
-            description: 'Our team brings years of experience from top bug bounty platforms and real-world security engagements.'
+            description: 'Our team brings years of experience from professional security engagements and real-world testing.'
         },
         {
             icon: <FaEye />,
@@ -177,7 +177,7 @@ const Services = () => {
                         </p>
                         <div className="glass-effect rounded-2xl p-6 border border-blue-500/20 inline-block">
                             <p className="text-lg font-semibold text-blue-400">
-                                Security Built by Hackers
+                                Security Built by Practitioners
                             </p>
                         </div>
                     </motion.div>
@@ -196,9 +196,8 @@ const Services = () => {
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6, delay: index * 0.05 }}
                                 onClick={() => setActiveService(index)}
-                                className={`card-hover bg-cyber-darker rounded-2xl p-6 cursor-pointer transition-all duration-300 ${
-                                    activeService === index ? 'ring-2 ring-blue-500 shadow-xl shadow-blue-500/20' : ''
-                                }`}
+                                className={`card-hover bg-cyber-darker rounded-2xl p-6 cursor-pointer transition-all duration-300 ${activeService === index ? 'ring-2 ring-blue-500 shadow-xl shadow-blue-500/20' : ''
+                                    }`}
                             >
                                 <div className={`text-4xl mb-4 bg-gradient-to-r ${service.color} bg-clip-text text-transparent`}>
                                     {service.icon}
@@ -326,21 +325,21 @@ const Services = () => {
                                 <div>
                                     <h3 className="text-2xl font-bold text-white mb-4">Manual Testing Foundation</h3>
                                     <p className="text-gray-300 leading-relaxed">
-                                        Automation is used only where it genuinely helps. All findings are manually validated. 
+                                        Automation is used only where it genuinely helps. All findings are manually validated.
                                         No false positives. No copied reports.
                                     </p>
                                 </div>
                                 <div>
                                     <h3 className="text-2xl font-bold text-white mb-4">Attacker Perspective</h3>
                                     <p className="text-gray-300 leading-relaxed">
-                                        We focus on understanding how an attacker would approach your system, 
+                                        We focus on understanding how an attacker would approach your system,
                                         what can realistically be exploited, and what the actual business impact is.
                                     </p>
                                 </div>
                                 <div>
                                     <h3 className="text-2xl font-bold text-white mb-4">Clear Outcomes</h3>
                                     <p className="text-gray-300 leading-relaxed">
-                                        Our goal is to give you clarity, not noise. We provide actionable recommendations 
+                                        Our goal is to give you clarity, not noise. We provide actionable recommendations
                                         that help you fix real security issues.
                                     </p>
                                 </div>
@@ -398,7 +397,7 @@ const Services = () => {
                                 className="magnetic-button glow-button inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full text-white font-bold text-lg transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/50"
                             >
                                 <FaCheckCircle />
-                                Get Security Assessment
+                                Get a Free Scope Call
                             </Link>
                             <Link
                                 to="/pricing"

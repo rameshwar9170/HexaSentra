@@ -66,19 +66,16 @@ const Clients = () => {
     const testimonials = [
         {
             quote: "HexaSentra's manual testing approach identified critical vulnerabilities that our automated tools completely missed. Their team thinks like real attackers.",
-            author: "CTO, Technology Startup",
             company: "Confidential Client",
             icon: <FaRocket />
         },
         {
             quote: "The clarity of their reports and actionable recommendations helped us fix real security issues quickly. No noise, just valuable insights.",
-            author: "Security Lead, SaaS Company",
             company: "Confidential Client",
             icon: <FaCode />
         },
         {
             quote: "Working with HexaSentra feels like having experienced security professionals as part of our team. They understand our business context.",
-            author: "Engineering Director, Enterprise",
             company: "Confidential Client",
             icon: <FaBuilding />
         }
@@ -173,7 +170,7 @@ const Clients = () => {
                                 </div>
                                 <h3 className="text-2xl font-bold text-white mb-4">{client.title}</h3>
                                 <p className="text-gray-300 leading-relaxed mb-6">{client.description}</p>
-                                
+
                                 <h4 className="text-lg font-semibold text-white mb-4">How We Help:</h4>
                                 <ul className="space-y-3">
                                     {client.benefits.map((benefit, idx) => (
@@ -224,7 +221,6 @@ const Clients = () => {
                                     "{testimonial.quote}"
                                 </blockquote>
                                 <div>
-                                    <div className="text-white font-semibold">{testimonial.author}</div>
                                     <div className="text-gray-400 text-sm">{testimonial.company}</div>
                                 </div>
                             </motion.div>
@@ -272,72 +268,7 @@ const Clients = () => {
                 </div>
             </section>
 
-            {/* Success Metrics */}
-            <section className="py-20 bg-cyber-darker">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                        className="text-center mb-16"
-                    >
-                        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                            Client <span className="text-blue-400">Success Metrics</span>
-                        </h2>
-                    </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
-                            className="text-center glass-effect rounded-2xl p-8 hover:bg-white/10 transition-all duration-300"
-                        >
-                            <div className="text-4xl md:text-5xl font-bold text-blue-400 mb-3">500+</div>
-                            <div className="text-lg font-semibold text-white mb-2">Organizations Secured</div>
-                            <div className="text-gray-400 text-sm">From startups to Fortune 500 companies</div>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
-                            className="text-center glass-effect rounded-2xl p-8 hover:bg-white/10 transition-all duration-300"
-                        >
-                            <div className="text-4xl md:text-5xl font-bold text-blue-400 mb-3">98%</div>
-                            <div className="text-lg font-semibold text-white mb-2">Client Satisfaction</div>
-                            <div className="text-gray-400 text-sm">Trusted by leading organizations worldwide</div>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: 0.3 }}
-                            className="text-center glass-effect rounded-2xl p-8 hover:bg-white/10 transition-all duration-300"
-                        >
-                            <div className="text-4xl md:text-5xl font-bold text-blue-400 mb-3">24h</div>
-                            <div className="text-lg font-semibold text-white mb-2">Response Time</div>
-                            <div className="text-gray-400 text-sm">Quick response to security inquiries</div>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: 0.4 }}
-                            className="text-center glass-effect rounded-2xl p-8 hover:bg-white/10 transition-all duration-300"
-                        >
-                            <div className="text-4xl md:text-5xl font-bold text-blue-400 mb-3">100%</div>
-                            <div className="text-lg font-semibold text-white mb-2">Confidentiality</div>
-                            <div className="text-gray-400 text-sm">Strict confidentiality maintained</div>
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
 
             {/* CTA Section */}
             <section className="py-20 bg-cyber-dark">
@@ -353,7 +284,7 @@ const Clients = () => {
                             Ready to Join Our <span className="text-blue-400">Client Family</span>?
                         </h2>
                         <p className="text-xl text-gray-300 mb-10 leading-relaxed max-w-3xl mx-auto">
-                            Whether you're a startup building your first product or an enterprise managing complex systems, 
+                            Whether you're a startup building your first product or an enterprise managing complex systems,
                             we have the expertise to help secure your organization.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-6 justify-center">
@@ -362,7 +293,7 @@ const Clients = () => {
                                 className="magnetic-button glow-button inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full text-white font-bold text-lg transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/50"
                             >
                                 <FaCheckCircle />
-                                Get Security Assessment
+                                Get a Free Scope Call
                             </Link>
                             <Link
                                 to="/about"

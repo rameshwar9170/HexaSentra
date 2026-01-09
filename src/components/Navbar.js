@@ -1,19 +1,55 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { gsap } from 'gsap';
 import { FaBars, FaTimes, FaShieldAlt } from 'react-icons/fa';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
+    const navBtnRef = useRef(null);
 
     useEffect(() => {
         const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
+            setScrolled(window.scrollY > 20);
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    // Magnetic effect for the "Get Started" button
+    useEffect(() => {
+        const btn = navBtnRef.current;
+        if (!btn) return;
+
+        const onMouseMove = (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            gsap.to(btn, {
+                x: x * 0.3,
+                y: y * 0.3,
+                duration: 0.5,
+                ease: "power2.out"
+            });
+        };
+
+        const onMouseLeave = () => {
+            gsap.to(btn, {
+                x: 0,
+                y: 0,
+                duration: 0.7,
+                ease: "elastic.out(1, 0.4)"
+            });
+        };
+
+        btn.addEventListener('mousemove', onMouseMove);
+        btn.addEventListener('mouseleave', onMouseLeave);
+        return () => {
+            btn.removeEventListener('mousemove', onMouseMove);
+            btn.removeEventListener('mouseleave', onMouseLeave);
+        };
     }, []);
 
     const navLinks = [
@@ -27,50 +63,67 @@ const Navbar = () => {
 
     return (
         <motion.nav
-            initial={{ y: -100 }}
-            animate={{ y: 0 }}
-            className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-cyber-darker/95 backdrop-blur-lg shadow-lg shadow-cyber-blue/10' : 'bg-transparent'
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className={`fixed w-full z-[100] transition-all duration-500 ${scrolled
+                    ? 'py-4 glass-premier border-b border-white/5'
+                    : 'py-8 bg-transparent'
                 }`}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-20">
+                <div className="flex justify-between items-center transition-all duration-500">
                     {/* Logo */}
-                    <Link to="/" className="flex items-center space-x-3 group">
-                        <div className="relative">
-                            <FaShieldAlt className="text-4xl text-cyber-blue group-hover:animate-pulse" />
-                            <div className="absolute inset-0 bg-cyber-blue/20 blur-xl group-hover:bg-cyber-blue/40 transition-all duration-300"></div>
-                        </div>
-                        <span className="text-2xl font-bold gradient-text">HexaSentra</span>
+                    <Link to="/" className="flex items-center space-x-3 group relative">
+                        <motion.div
+                            whileHover={{ rotate: 360, scale: 1.1 }}
+                            transition={{ duration: 0.8, ease: "anticipate" }}
+                            className="relative"
+                        >
+                            <FaShieldAlt className="text-4xl text-blue-500 filter drop-shadow-[0_0_8px_rgba(37,99,235,0.6)]" />
+                            <div className="absolute inset-0 bg-blue-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        </motion.div>
+                        <span className="text-2xl font-black gradient-text tracking-tighter">HexaSentra</span>
                     </Link>
 
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center space-x-8">
+                    <div className="hidden md:flex items-center space-x-1">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.path}
                                 to={link.path}
-                                className={`relative text-lg font-medium transition-all duration-300 group ${location.pathname === link.path ? 'text-cyber-blue' : 'text-gray-300 hover:text-white'
+                                className={`relative px-5 py-2 text-sm font-bold uppercase tracking-widest transition-all duration-300 group ${location.pathname === link.path ? 'text-blue-400' : 'text-gray-400 hover:text-white'
                                     }`}
                             >
-                                {link.name}
-                                <span
-                                    className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-cyber-blue to-cyber-purple transition-all duration-300 ${location.pathname === link.path ? 'w-full' : 'w-0 group-hover:w-full'
-                                        }`}
-                                ></span>
+                                <span className="relative z-10">{link.name}</span>
+                                {location.pathname === link.path && (
+                                    <motion.span
+                                        layoutId="nav-pill"
+                                        className="absolute inset-0 bg-blue-500/10 rounded-full border border-blue-500/20"
+                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                    />
+                                )}
+                                <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-blue-500 group-hover:w-1/2 transition-all duration-300" />
                             </Link>
                         ))}
-                        <Link
-                            to="/contact"
-                            className="glow-button relative px-6 py-3 bg-gradient-to-r from-cyber-blue to-cyber-purple rounded-full text-white font-bold hover:shadow-lg hover:shadow-cyber-blue/50 transition-all duration-300"
-                        >
-                            Get Started
-                        </Link>
+
+                        <div className="pl-6">
+                            <Link
+                                ref={navBtnRef}
+                                to="/contact"
+                                className="magnetic-button group relative px-8 py-3 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-full text-white font-bold text-sm uppercase tracking-widest overflow-hidden flex items-center gap-3 shadow-[0_4px_20px_rgba(37,99,235,0.3)] hover:shadow-[0_8px_30px_rgba(37,99,235,0.5)] transition-all duration-300"
+                            >
+                                <span className="relative z-10">Get Started</span>
+                                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <div className="absolute inset-0 shimmer-btn" />
+                            </Link>
+                        </div>
                     </div>
 
                     {/* Mobile Menu Button */}
                     <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden text-3xl text-cyber-blue hover:text-cyber-purple transition-colors duration-300"
+                        className="md:hidden text-3xl text-blue-500 hover:text-white transition-colors duration-300"
                     >
                         {isOpen ? <FaTimes /> : <FaBars />}
                     </button>
@@ -80,18 +133,21 @@ const Navbar = () => {
             {/* Mobile Menu */}
             <motion.div
                 initial={false}
-                animate={{ height: isOpen ? 'auto' : 0 }}
-                className="md:hidden overflow-hidden bg-cyber-dark/98 backdrop-blur-lg"
+                animate={{
+                    height: isOpen ? 'auto' : 0,
+                    opacity: isOpen ? 1 : 0
+                }}
+                className="md:hidden overflow-hidden glass-premier border-t border-white/5"
             >
-                <div className="px-4 py-6 space-y-4">
+                <div className="px-4 py-8 space-y-4">
                     {navLinks.map((link) => (
                         <Link
                             key={link.path}
                             to={link.path}
                             onClick={() => setIsOpen(false)}
-                            className={`block text-lg font-medium py-3 px-4 rounded-lg transition-all duration-300 ${location.pathname === link.path
-                                ? 'bg-gradient-to-r from-cyber-blue/20 to-cyber-purple/20 text-cyber-blue border-l-4 border-cyber-blue'
-                                : 'text-gray-300 hover:bg-cyber-blue/10 hover:text-white'
+                            className={`block text-xl font-bold uppercase tracking-tighter py-4 px-6 rounded-2xl transition-all duration-300 ${location.pathname === link.path
+                                    ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
                                 }`}
                         >
                             {link.name}
@@ -100,7 +156,7 @@ const Navbar = () => {
                     <Link
                         to="/contact"
                         onClick={() => setIsOpen(false)}
-                        className="block text-center px-6 py-3 bg-gradient-to-r from-cyber-blue to-cyber-purple rounded-full text-white font-bold hover:shadow-lg hover:shadow-cyber-blue/50 transition-all duration-300"
+                        className="block text-center px-6 py-5 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl text-white font-bold text-xl uppercase tracking-widest"
                     >
                         Get Started
                     </Link>
