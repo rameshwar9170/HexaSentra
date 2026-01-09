@@ -5,6 +5,8 @@ import {
     FaTwitter, FaGithub, FaPaperPlane, FaCheckCircle,
     FaShieldAlt, FaClock, FaUsers, FaGlobe
 } from 'react-icons/fa';
+import { database } from '../firebase/config';
+import { ref, push, set } from 'firebase/database';
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -20,6 +22,8 @@ const Contact = () => {
     });
 
     const [submitted, setSubmitted] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const handleChange = (e) => {
         setFormData({
@@ -28,24 +32,53 @@ const Contact = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Security Assessment Request:', formData);
-        setSubmitted(true);
-        setTimeout(() => {
-            setSubmitted(false);
-            setFormData({
-                name: '',
-                email: '',
-                company: '',
-                phone: '',
-                service: '',
-                environment: '',
-                timeline: '',
-                compliance: '',
-                message: ''
-            });
-        }, 3000);
+        setLoading(true);
+        setError('');
+
+        try {
+            // Create a reference to the contact requests in Firebase
+            const contactRequestsRef = ref(database, 'contactRequests');
+
+            // Create a new request with a unique ID
+            const newRequestRef = push(contactRequestsRef);
+
+            // Add timestamp and status to the form data
+            const requestData = {
+                ...formData,
+                timestamp: new Date().toISOString(),
+                status: 'new',
+                id: newRequestRef.key
+            };
+
+            // Save to Firebase
+            await set(newRequestRef, requestData);
+
+            console.log('Security Assessment Request saved to Firebase:', requestData);
+            setSubmitted(true);
+            setLoading(false);
+
+            // Reset form after 3 seconds
+            setTimeout(() => {
+                setSubmitted(false);
+                setFormData({
+                    name: '',
+                    email: '',
+                    company: '',
+                    phone: '',
+                    service: '',
+                    environment: '',
+                    timeline: '',
+                    compliance: '',
+                    message: ''
+                });
+            }, 3000);
+        } catch (err) {
+            console.error('Error saving to Firebase:', err);
+            setError('Failed to submit request. Please try again or contact us directly via email.');
+            setLoading(false);
+        }
     };
 
     const contactInfo = [
@@ -168,148 +201,160 @@ const Contact = () => {
                                         <h4 className="text-2xl font-bold text-white mb-4">Request Submitted!</h4>
                                         <p className="text-gray-300">
                                             Thank you for your interest in HexaSentra. Our security experts will review your
-                                            request and respond within 24 hours with a recommended engagement plan.
+                                            request and respond as quickly as possible during business hours.
                                         </p>
                                     </motion.div>
                                 ) : (
-                                    <form onSubmit={handleSubmit} className="space-y-6">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div>
-                                                <label className="block text-white font-semibold mb-2">Full Name *</label>
-                                                <input
-                                                    type="text"
-                                                    name="name"
-                                                    value={formData.name}
-                                                    onChange={handleChange}
-                                                    required
-                                                    className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors duration-300"
-                                                    placeholder="Your full name"
-                                                />
+                                    <>
+                                        {error && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: -10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                className="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-lg"
+                                            >
+                                                <p className="text-red-400">{error}</p>
+                                            </motion.div>
+                                        )}
+                                        <form onSubmit={handleSubmit} className="space-y-6">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <div>
+                                                    <label className="block text-white font-semibold mb-2">Full Name *</label>
+                                                    <input
+                                                        type="text"
+                                                        name="name"
+                                                        value={formData.name}
+                                                        onChange={handleChange}
+                                                        required
+                                                        className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors duration-300"
+                                                        placeholder="Your full name"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-white font-semibold mb-2">Company *</label>
+                                                    <input
+                                                        type="text"
+                                                        name="company"
+                                                        value={formData.company}
+                                                        onChange={handleChange}
+                                                        required
+                                                        className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors duration-300"
+                                                        placeholder="Your organization"
+                                                    />
+                                                </div>
                                             </div>
-                                            <div>
-                                                <label className="block text-white font-semibold mb-2">Company *</label>
-                                                <input
-                                                    type="text"
-                                                    name="company"
-                                                    value={formData.company}
-                                                    onChange={handleChange}
-                                                    required
-                                                    className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors duration-300"
-                                                    placeholder="Your organization"
-                                                />
-                                            </div>
-                                        </div>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div>
-                                                <label className="block text-white font-semibold mb-2">Email *</label>
-                                                <input
-                                                    type="email"
-                                                    name="email"
-                                                    value={formData.email}
-                                                    onChange={handleChange}
-                                                    required
-                                                    className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors duration-300"
-                                                    placeholder="your.email@company.com"
-                                                />
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <div>
+                                                    <label className="block text-white font-semibold mb-2">Email *</label>
+                                                    <input
+                                                        type="email"
+                                                        name="email"
+                                                        value={formData.email}
+                                                        onChange={handleChange}
+                                                        required
+                                                        className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors duration-300"
+                                                        placeholder="your.email@company.com"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-white font-semibold mb-2">Phone</label>
+                                                    <input
+                                                        type="tel"
+                                                        name="phone"
+                                                        value={formData.phone}
+                                                        onChange={handleChange}
+                                                        className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors duration-300"
+                                                        placeholder="+1 (555) 123-4567"
+                                                    />
+                                                </div>
                                             </div>
-                                            <div>
-                                                <label className="block text-white font-semibold mb-2">Phone</label>
-                                                <input
-                                                    type="tel"
-                                                    name="phone"
-                                                    value={formData.phone}
-                                                    onChange={handleChange}
-                                                    className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors duration-300"
-                                                    placeholder="+1 (555) 123-4567"
-                                                />
-                                            </div>
-                                        </div>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div>
-                                                <label className="block text-white font-semibold mb-2">Service Needed *</label>
-                                                <select
-                                                    name="service"
-                                                    value={formData.service}
-                                                    onChange={handleChange}
-                                                    required
-                                                    className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white focus:border-blue-500 focus:outline-none transition-colors duration-300"
-                                                >
-                                                    <option value="">Select a service</option>
-                                                    {services.map((service, index) => (
-                                                        <option key={index} value={service}>{service}</option>
-                                                    ))}
-                                                </select>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <div>
+                                                    <label className="block text-white font-semibold mb-2">Service Needed *</label>
+                                                    <select
+                                                        name="service"
+                                                        value={formData.service}
+                                                        onChange={handleChange}
+                                                        required
+                                                        className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white focus:border-blue-500 focus:outline-none transition-colors duration-300"
+                                                    >
+                                                        <option value="">Select a service</option>
+                                                        {services.map((service, index) => (
+                                                            <option key={index} value={service}>{service}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-white font-semibold mb-2">Environment Type *</label>
+                                                    <select
+                                                        name="environment"
+                                                        value={formData.environment}
+                                                        onChange={handleChange}
+                                                        required
+                                                        className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white focus:border-blue-500 focus:outline-none transition-colors duration-300"
+                                                    >
+                                                        <option value="">Select environment</option>
+                                                        {environments.map((env, index) => (
+                                                            <option key={index} value={env}>{env}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <label className="block text-white font-semibold mb-2">Environment Type *</label>
-                                                <select
-                                                    name="environment"
-                                                    value={formData.environment}
-                                                    onChange={handleChange}
-                                                    required
-                                                    className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white focus:border-blue-500 focus:outline-none transition-colors duration-300"
-                                                >
-                                                    <option value="">Select environment</option>
-                                                    {environments.map((env, index) => (
-                                                        <option key={index} value={env}>{env}</option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                        </div>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div>
-                                                <label className="block text-white font-semibold mb-2">Timeline</label>
-                                                <select
-                                                    name="timeline"
-                                                    value={formData.timeline}
-                                                    onChange={handleChange}
-                                                    className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white focus:border-blue-500 focus:outline-none transition-colors duration-300"
-                                                >
-                                                    <option value="">Select timeline</option>
-                                                    {timelines.map((timeline, index) => (
-                                                        <option key={index} value={timeline}>{timeline}</option>
-                                                    ))}
-                                                </select>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <div>
+                                                    <label className="block text-white font-semibold mb-2">Timeline</label>
+                                                    <select
+                                                        name="timeline"
+                                                        value={formData.timeline}
+                                                        onChange={handleChange}
+                                                        className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white focus:border-blue-500 focus:outline-none transition-colors duration-300"
+                                                    >
+                                                        <option value="">Select timeline</option>
+                                                        {timelines.map((timeline, index) => (
+                                                            <option key={index} value={timeline}>{timeline}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-white font-semibold mb-2">Compliance Needs</label>
+                                                    <select
+                                                        name="compliance"
+                                                        value={formData.compliance}
+                                                        onChange={handleChange}
+                                                        className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white focus:border-blue-500 focus:outline-none transition-colors duration-300"
+                                                    >
+                                                        <option value="">Select compliance</option>
+                                                        {complianceNeeds.map((compliance, index) => (
+                                                            <option key={index} value={compliance}>{compliance}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
                                             </div>
+
                                             <div>
-                                                <label className="block text-white font-semibold mb-2">Compliance Needs</label>
-                                                <select
-                                                    name="compliance"
-                                                    value={formData.compliance}
+                                                <label className="block text-white font-semibold mb-2">Additional Details</label>
+                                                <textarea
+                                                    name="message"
+                                                    value={formData.message}
                                                     onChange={handleChange}
-                                                    className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white focus:border-blue-500 focus:outline-none transition-colors duration-300"
-                                                >
-                                                    <option value="">Select compliance</option>
-                                                    {complianceNeeds.map((compliance, index) => (
-                                                        <option key={index} value={compliance}>{compliance}</option>
-                                                    ))}
-                                                </select>
+                                                    rows="4"
+                                                    className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors duration-300 resize-none"
+                                                    placeholder="Tell us more about your security goals, specific concerns, or any additional context that would help us provide the best recommendation..."
+                                                ></textarea>
                                             </div>
-                                        </div>
 
-                                        <div>
-                                            <label className="block text-white font-semibold mb-2">Additional Details</label>
-                                            <textarea
-                                                name="message"
-                                                value={formData.message}
-                                                onChange={handleChange}
-                                                rows="4"
-                                                className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors duration-300 resize-none"
-                                                placeholder="Tell us more about your security goals, specific concerns, or any additional context that would help us provide the best recommendation..."
-                                            ></textarea>
-                                        </div>
-
-                                        <button
-                                            type="submit"
-                                            className="w-full glow-button px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full text-white font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 hover:shadow-xl hover:shadow-blue-500/50"
-                                        >
-                                            <FaPaperPlane />
-                                            Request Security Assessment
-                                        </button>
-                                    </form>
+                                            <button
+                                                type="submit"
+                                                disabled={loading}
+                                                className={`w-full glow-button px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full text-white font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 hover:shadow-xl hover:shadow-blue-500/50 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                            >
+                                                <FaPaperPlane />
+                                                {loading ? 'Submitting...' : 'Request Security Assessment'}
+                                            </button>
+                                        </form>
+                                    </>
                                 )}
                             </motion.div>
                         </div>

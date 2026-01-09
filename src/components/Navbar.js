@@ -67,8 +67,8 @@ const Navbar = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className={`fixed w-full z-[100] transition-all duration-500 ${scrolled
-                    ? 'py-4 glass-premier border-b border-white/5'
-                    : 'py-8 bg-transparent'
+                ? 'py-4 glass-premier border-b border-white/5'
+                : 'py-8 bg-transparent'
                 }`}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -92,6 +92,7 @@ const Navbar = () => {
                             <Link
                                 key={link.path}
                                 to={link.path}
+                                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                                 className={`relative px-5 py-2 text-sm font-bold uppercase tracking-widest transition-all duration-300 group ${location.pathname === link.path ? 'text-blue-400' : 'text-gray-400 hover:text-white'
                                     }`}
                             >
@@ -111,6 +112,7 @@ const Navbar = () => {
                             <Link
                                 ref={navBtnRef}
                                 to="/contact"
+                                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                                 className="magnetic-button group relative px-8 py-3 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-full text-white font-bold text-sm uppercase tracking-widest overflow-hidden flex items-center gap-3 shadow-[0_4px_20px_rgba(37,99,235,0.3)] hover:shadow-[0_8px_30px_rgba(37,99,235,0.5)] transition-all duration-300"
                             >
                                 <span className="relative z-10">Get Started</span>
@@ -144,10 +146,13 @@ const Navbar = () => {
                         <Link
                             key={link.path}
                             to={link.path}
-                            onClick={() => setIsOpen(false)}
+                            onClick={() => {
+                                setIsOpen(false);
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
                             className={`block text-xl font-bold uppercase tracking-tighter py-4 px-6 rounded-2xl transition-all duration-300 ${location.pathname === link.path
-                                    ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-                                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                                ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                                : 'text-gray-400 hover:bg-white/5 hover:text-white'
                                 }`}
                         >
                             {link.name}
@@ -155,7 +160,10 @@ const Navbar = () => {
                     ))}
                     <Link
                         to="/contact"
-                        onClick={() => setIsOpen(false)}
+                        onClick={() => {
+                            setIsOpen(false);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
                         className="block text-center px-6 py-5 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl text-white font-bold text-xl uppercase tracking-widest"
                     >
                         Get Started
