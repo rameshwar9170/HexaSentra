@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaShieldAlt, FaLock, FaUser } from 'react-icons/fa';
+import { FaShieldAlt, FaLock, FaUser, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { auth } from '../firebase/config';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
 const AdminLogin = () => {
@@ -12,7 +12,20 @@ const AdminLogin = () => {
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
+
+    // Check if user is already logged in
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is already logged in, redirect to dashboard
+                navigate('/admin/dashboard');
+            }
+        });
+
+        return () => unsubscribe();
+    }, [navigate]);
 
     const handleChange = (e) => {
         setCredentials({
@@ -89,15 +102,24 @@ const AdminLogin = () => {
                                 <FaLock className="inline mr-2" />
                                 Password
                             </label>
-                            <input
-                                type="password"
-                                name="password"
-                                value={credentials.password}
-                                onChange={handleChange}
-                                required
-                                className="w-full px-4 py-3 bg-cyber-darker border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors duration-300"
-                                placeholder="••••••••"
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    value={credentials.password}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full px-4 py-3 pr-12 bg-cyber-darker border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors duration-300"
+                                    placeholder="••••••••"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-400 transition-colors duration-300"
+                                >
+                                    {showPassword ? <FaEyeSlash className="text-xl" /> : <FaEye className="text-xl" />}
+                                </button>
+                            </div>
                         </div>
 
                         <button
