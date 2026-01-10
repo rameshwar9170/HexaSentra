@@ -79,7 +79,7 @@ const Footer = () => {
                                 <FaEnvelope className="text-cyber-blue mt-1 flex-shrink-0" />
                                 <div className="flex flex-col">
                                     <span>contact@hexasentra.com</span>
-                                    <span>hello@hexasentra.com</span>
+                                    {/* <span>hello@hexasentra.com</span> */}
                                     <span>security@hexasentra.com</span>
                                 </div>
                             </li>
@@ -99,8 +99,8 @@ const Footer = () => {
                             © {currentYear} HexaSentra. All rights reserved.
                         </p>
                         <div className="flex space-x-6 text-sm">
-                            <a href="/privacy" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">Privacy Policy</a>
-                            <a href="/terms" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">Terms of Service</a>
+                            <Link to="/privacy" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">Privacy Policy</Link>
+                            <Link to="/terms" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">Terms of Service</Link>
                             <a href="/cookies" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">Cookie Policy</a>
                         </div>
                     </div>

@@ -1245,7 +1245,7 @@ const Home = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                         {[
-                            { icon: <FaEnvelope />, title: 'Email', value: 'security@hexasentra.com', link: 'mailto:security@hexasentra.com' },
+                            { icon: <FaEnvelope />, title: 'Email', value: 'contact@hexasentra.com', link: 'mailto:contact@hexasentra.com' },
 
                             { icon: <FaMapMarkerAlt />, title: 'Location', value: 'Pune, Maharashtra', link: '#' }
                         ].map((contact, index) => (

@@ -10,6 +10,8 @@ import Services from './pages/Services';
 import Pricing from './pages/Pricing';
 import Clients from './pages/Clients';
 import Contact from './pages/Contact';
+import TermsAndConditions from './pages/TermsAndConditions';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 
@@ -29,6 +31,8 @@ function AppContent() {
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/clients" element={<Clients />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/terms" element={<TermsAndConditions />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Routes>
