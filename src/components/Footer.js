@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaShieldAlt, FaTwitter, FaLinkedin, FaGithub, FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaShieldAlt, FaLinkedin, FaInstagram, FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -11,9 +12,12 @@ const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {/* Brand Section */}
                     <div className="space-y-4">
-                        <div className="flex items-center space-x-3">
-                            <FaShieldAlt className="text-3xl text-cyber-blue" />
-                            <span className="text-2xl font-bold gradient-text">HexaSentra</span>
+                        <div className="flex items-center">
+                            <img
+                                src="/images/hexa.png"
+                                alt="HexaSentra Logo"
+                                className="h-10 w-auto object-contain filter drop-shadow-[0_0_8px_rgba(37,99,235,0.4)]"
+                            />
                         </div>
                         <p className="text-gray-400 text-sm leading-relaxed">
                             Security Built by Practitioners
@@ -22,14 +26,14 @@ const Footer = () => {
                             Cybersecurity & Penetration Testing Services
                         </p>
                         <div className="flex space-x-4">
-                            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">
-                                <FaTwitter className="text-2xl" />
+                            <a href="https://x.com/hexasentra89702" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">
+                                <FaXTwitter className="text-2xl" />
                             </a>
-                            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">
+                            <a href="https://www.linkedin.com/company/hexasentra" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">
                                 <FaLinkedin className="text-2xl" />
                             </a>
-                            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">
-                                <FaGithub className="text-2xl" />
+                            <a href="https://www.instagram.com/hexasentra" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">
+                                <FaInstagram className="text-2xl" />
                             </a>
                         </div>
                     </div>
@@ -101,7 +105,6 @@ const Footer = () => {
                         <div className="flex space-x-6 text-sm">
                             <Link to="/privacy" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">Privacy Policy</Link>
                             <Link to="/terms" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">Terms of Service</Link>
-                            <a href="/cookies" className="text-gray-400 hover:text-cyber-blue transition-colors duration-300">Cookie Policy</a>
                         </div>
                     </div>
                 </div>

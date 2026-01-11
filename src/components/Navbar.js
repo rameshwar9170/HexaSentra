@@ -74,16 +74,19 @@ const Navbar = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center transition-all duration-500">
                     {/* Logo */}
-                    <Link to="/" className="flex items-center space-x-3 group relative">
+                    <Link to="/" className="flex items-center group relative">
                         <motion.div
-                            whileHover={{ rotate: 360, scale: 1.1 }}
-                            transition={{ duration: 0.8, ease: "anticipate" }}
-                            className="relative"
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
+                            className="relative h-16 md:h-20 flex items-center"
                         >
-                            <FaShieldAlt className="text-4xl text-blue-500 filter drop-shadow-[0_0_8px_rgba(37,99,235,0.6)]" />
-                            <div className="absolute inset-0 bg-blue-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            <img
+                                src="/images/hexapng.png"
+                                alt="HexaSentra Logo"
+                                className="h-full w-auto object-contain filter drop-shadow-[0_0_8px_rgba(37,99,235,0.4)]"
+                            />
+                            <div className="absolute inset-0 bg-blue-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         </motion.div>
-                        <span className="text-2xl font-black gradient-text tracking-tighter">HexaSentra</span>
                     </Link>
 
                     {/* Desktop Menu */}
