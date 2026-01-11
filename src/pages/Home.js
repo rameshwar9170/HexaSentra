@@ -593,10 +593,22 @@ const Home = () => {
                                 <motion.div
                                     animate={{ rotate: [0, 5, -5, 0] }}
                                     transition={{ duration: 4, repeat: Infinity }}
+                                    className="mb-8"
                                 >
                                     <FaShieldAlt className="text-6xl text-blue-500 mb-6 mx-auto" />
                                 </motion.div>
-                                <h3 className="text-2xl font-bold text-white mb-4">That is exactly how we work.</h3>
+
+                                <div className="mb-10">
+                                    <h3 className="text-3xl font-bold text-white mb-6 tracking-tight">Security is our full-time discipline</h3>
+                                    <p className="text-xl text-gray-300 leading-relaxed mb-4">
+                                        From research to real-world exploitation.
+                                    </p>
+                                    <p className="text-gray-400 leading-relaxed">
+                                        We don't just identify vulnerabilities—we understand the complete attack chain, from initial reconnaissance to full system compromise.
+                                    </p>
+                                </div>
+
+                                <h3 className="text-2xl font-bold text-white mb-6">That is exactly how we work.</h3>
                                 <p className="text-gray-300 leading-relaxed mb-6">
                                     We are a startup by name, but our team members bring years of individual experience securing real production systems.
                                 </p>
